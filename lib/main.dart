@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rahbaran/page/login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rahbaran/page/news.dart';
+import 'package:rahbaran/page/news_details.dart';
+import 'package:rahbaran/page/pre_forget_password.dart';
 
 void main() => runApp(MyApp());
 
@@ -33,8 +36,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'BNazanin',
         primaryColor: Color(0xff1fd3ae)
       ),
-      home: Login(),
+      home: PreForgetPassword(),
     );
   }
 }
+
+
 
