@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: Colors.blue,
-        fontFamily: 'BNazanin',
+        fontFamily: 'BYekan',
         primaryColor: Color(0xff1fd3ae)
       ),
-      home: PreForgetPassword(),
+      home: Login(),
     );
   }
 }

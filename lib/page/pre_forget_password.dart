@@ -12,7 +12,7 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
   Color mainColor = Color(0xff1fd3ae);
   OutlineInputBorder textFieldBorder =
   OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(7)));
-  TextStyle buttonTextStyle = TextStyle(color: Colors.white, fontSize: 20);
+  TextStyle buttonTextStyle = TextStyle(color: Colors.white, fontSize: 20,fontFamily: 'IranSans');
   RoundedRectangleBorder buttonRoundedRectangleBorder =
   RoundedRectangleBorder(borderRadius: BorderRadius.circular(7));
   TextStyle headerTextStyle=TextStyle(fontSize: 14,color: Colors.grey);
@@ -49,6 +49,12 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
             title: Text('فراموشی رمز عبور'),
             centerTitle: true,
             elevation: 2,
+            automaticallyImplyLeading: false,
+            actions: <Widget>[
+              IconButton(icon: Icon(Icons.arrow_forward), onPressed: (){
+                Navigator.of(context).pop();
+              })
+            ],
           ),
           body: Container(
             alignment: Alignment.center,
@@ -69,17 +75,9 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
   Widget headerSection() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        children: <Widget>[
-          Image.asset(
-            "assets/images/logo.png",
-            width: MediaQuery.of(context).size.width / 2.8,
-          ),
-          Text(
-            'راهبران حمل و نقل',
-            style: headerTextStyle,
-          ),
-        ],
+      child: Image.asset(
+        "assets/images/logo.png",
+        width: MediaQuery.of(context).size.width / 2.8,
       ),
     );
   }
@@ -98,7 +96,7 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                    hintText: 'شماره ملی',
+                    hintText: 'راهبران حمل و نقل',
                     prefixIcon: Icon(
                       Icons.person,
                       color: iconColor,

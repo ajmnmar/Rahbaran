@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:rahbaran/common/national_code.dart';
 import 'package:rahbaran/page/home.dart';
+import 'package:rahbaran/page/news.dart';
+import 'package:rahbaran/page/pre_forget_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -109,23 +111,10 @@ class LoginState extends State<Login> {
   Widget headerSection() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
-      margin: EdgeInsets.only(top: 30),
-      child: Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-            child: Image.asset(
-              "assets/images/logo.png",
-              width: MediaQuery.of(context).size.width / 2.8,
-            ),
-          ),
-          Container(
-            child: Text(
-              'لطفا شماره ملی و کلمه عبور خود را وارد نمایید',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-        ],
+      margin: EdgeInsets.only(top: 40),
+      child: Image.asset(
+        "assets/images/logo.png",
+        width: MediaQuery.of(context).size.width / 2.8,
       ),
     );
   }
@@ -145,6 +134,7 @@ class LoginState extends State<Login> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                     hintText: 'شماره ملی',
+                    contentPadding: EdgeInsets.all(5),
                     prefixIcon: Icon(
                       Icons.person,
                       color: iconColor,
@@ -225,7 +215,11 @@ class LoginState extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (BuildContext context) => PreForgetPassword())
+                );
+              },
               child: Text(
                 'فراموشی رمز عبور',
                 style: flatButtonTextStyle,
@@ -281,7 +275,7 @@ class LoginState extends State<Login> {
           setState(() {
             sharedPreferences.setString('token', jsonResponse['data']['token']);
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (BuildContext context) => Home()),
+                MaterialPageRoute(builder: (BuildContext context) => News()),
                 (Route<dynamic> rout) => false);
           });
         } else if (jsonResponse['message']['code'] == 6) {
