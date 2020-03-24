@@ -68,7 +68,7 @@ flutter:
   #         style: italic
      - family: BYekan
        fonts:
-         - asset: fonts/BYEKAN.TTF
+         - asset: assets/fonts/BYEKAN.TTF
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

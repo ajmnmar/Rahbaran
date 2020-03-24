@@ -1,22 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:rahbaran/common/national_code.dart';
+import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/helper/widget_helper.dart';
+import 'package:rahbaran/page/validation_base_state.dart';
+
+import 'base_state.dart';
 
 class PreForgetPassword extends StatefulWidget {
   @override
   PreForgetPasswordState createState() => PreForgetPasswordState();
 }
 
-class PreForgetPasswordState extends State<PreForgetPassword> {
-  //styles
-  Color iconColor = Color(0xff1fd3ae);
-  Color mainColor = Color(0xff1fd3ae);
-  OutlineInputBorder textFieldBorder =
-  OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(7)));
-  TextStyle buttonTextStyle = TextStyle(color: Colors.white, fontSize: 20,fontFamily: 'IranSans');
-  RoundedRectangleBorder buttonRoundedRectangleBorder =
-  RoundedRectangleBorder(borderRadius: BorderRadius.circular(7));
-  TextStyle headerTextStyle=TextStyle(fontSize: 14,color: Colors.grey);
-
+class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
   //controllers
   TextEditingController nationalCodeController = new TextEditingController();
   TextEditingController mobileController = new TextEditingController();
@@ -46,28 +44,29 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
         Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
-            title: Text('فراموشی رمز عبور'),
+            title: Text('فراموشی رمز عبور',
+                style: StyleHelper.appBarTitleTextStyle),
             centerTitle: true,
             elevation: 2,
             automaticallyImplyLeading: false,
             actions: <Widget>[
-              IconButton(icon: Icon(Icons.arrow_forward), onPressed: (){
-                Navigator.of(context).pop();
-              })
+              IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
             ],
           ),
           body: Container(
             alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                headerSection(),
-                forgetPasswordSection()
-              ],
+              children: <Widget>[headerSection(), forgetPasswordSection()],
             ),
           ),
         ),
-        //messageSection()
+        WidgetHelper.messageSection(
+            messageOpacity, MediaQuery.of(context).padding.top, message)
       ],
     );
   }
@@ -97,11 +96,12 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                     hintText: 'راهبران حمل و نقل',
+                    contentPadding: EdgeInsets.all(7),
                     prefixIcon: Icon(
                       Icons.person,
-                      color: iconColor,
+                      color: StyleHelper.iconColor,
                     ),
-                    border: textFieldBorder)),
+                    border: StyleHelper.textFieldBorder)),
           ),
           SizedBox(
             height: 10,
@@ -116,11 +116,12 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
                     hintText: 'شماره موبایل',
+                    contentPadding: EdgeInsets.all(7),
                     prefixIcon: Icon(
                       Icons.phone,
                       color: Color(0xff1fd3ae),
                     ),
-                    border: textFieldBorder),
+                    border: StyleHelper.textFieldBorder),
               ),
             ),
           ),
@@ -132,43 +133,49 @@ class PreForgetPasswordState extends State<PreForgetPassword> {
             height: nationalTextFieldHeight,
             child: RaisedButton(
               onPressed: () {
-                /*hideValidation();
-                if (usernameController.text.isEmpty) {
-                  showValidation('لطفا شماره ملی خود را وارد کنید');
-                  return;
-                } else if (passwordController.text.isEmpty) {
-                  showValidation('لطفا رمز عبور خود را وارد کنید');
-                  return;
-                } else if (NationalCode.checkNationalCode(
-                    usernameController.text) ==
-                    false) {
-                  showValidation('فرمت شماره ملی اشتباره است');
-                  return;
-                }
-                setState(() {
-                  isLoading = true;
-                });
-                signIn(usernameController.text, passwordController.text);*/
+                forgetButtonClicked();
               },
-              color: mainColor,
-              shape: buttonRoundedRectangleBorder,
+              color: StyleHelper.mainColor,
+              shape: StyleHelper.buttonRoundedRectangleBorder,
               child: isLoading
-                  ? CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Colors.white))
-                  : Text('درخواست تغییر رمز', style: buttonTextStyle),
+                  ? CircularProgressIndicator(
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white))
+                  : Text('درخواست تغییر رمز',
+                      style: StyleHelper.buttonTextStyle),
             ),
           ),
-          /*Visibility(
+          Visibility(
             visible: validationVisibility,
             child: Container(
               margin: EdgeInsets.only(top: 10),
               child: Text(
                 validationMessage,
-                style: validationTextStyle,
+                style: StyleHelper.validationTextStyle,
               ),
             ),
-          ),*/
+          ),
         ],
       ),
     );
+  }
+
+  void forgetButtonClicked() {
+    hideValidation();
+    if (nationalCodeController.text.isEmpty) {
+      showValidation('لطفا شماره ملی خود را وارد کنید');
+      return;
+    } else if (mobileController.text.isEmpty) {
+      showValidation('لطفا شماره موبایل خود را وارد کنید');
+      return;
+    } else if (NationalCode.checkNationalCode(nationalCodeController.text) ==
+        false) {
+      showValidation('فرمت شماره ملی اشتباره است');
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    //signIn(usernameController.text, passwordController.text);
   }
 }
