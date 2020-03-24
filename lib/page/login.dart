@@ -204,7 +204,9 @@ class LoginState extends ValidationBaseState<Login> {
         }
       }
     }finally{
-      isLoading=false;
+      setState(() {
+        isLoading=false;
+      });
     }
   }
 

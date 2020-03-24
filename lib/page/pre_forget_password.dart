@@ -6,6 +6,8 @@ import 'package:rahbaran/common/national_code.dart';
 import 'package:rahbaran/helper/style_helper.dart';
 import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/validation_base_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' as convert;
 
 import 'base_state.dart';
 
@@ -160,22 +162,43 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
     );
   }
 
-  void forgetButtonClicked() {
-    hideValidation();
-    if (nationalCodeController.text.isEmpty) {
-      showValidation('لطفا شماره ملی خود را وارد کنید');
-      return;
-    } else if (mobileController.text.isEmpty) {
-      showValidation('لطفا شماره موبایل خود را وارد کنید');
-      return;
-    } else if (NationalCode.checkNationalCode(nationalCodeController.text) ==
-        false) {
-      showValidation('فرمت شماره ملی اشتباره است');
-      return;
+  void forgetButtonClicked() async{
+    try {
+      hideValidation();
+      if (nationalCodeController.text.isEmpty) {
+        showValidation('لطفا شماره ملی خود را وارد کنید');
+        return;
+      } else if (mobileController.text.isEmpty) {
+        showValidation('لطفا شماره موبایل خود را وارد کنید');
+        return;
+      } else if (NationalCode.checkNationalCode(nationalCodeController.text) ==
+          false) {
+        showValidation('فرمت شماره ملی اشتباره است');
+        return;
+      }
+      setState(() {
+        isLoading = true;
+      });
+
+      var url =
+          'https://apimy.rmto.ir/api/Hambar/PreforgotPassword?nationalCode=$nationalCodeController.text&mobileNumber=$mobileController.text';
+      var response = await getApiData(url);
+      if (response != null){
+        var jsonResponse = convert.jsonDecode(response.body);
+        if (jsonResponse['message']['code'] == 0) {
+          setState(() {
+            /*Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (BuildContext context) => News()),
+                    (Route<dynamic> rout) => false);*/
+          });
+        } else if (jsonResponse['message']['code'] == 6) {
+          //showValidation('نام کاربری یا رمز عبور اشتباه است');
+        }
+      }
+    }finally{
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isLoading = true;
-    });
-    //signIn(usernameController.text, passwordController.text);
   }
 }
