@@ -1,23 +1,18 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:rahbaran/common/national_code.dart';
-import 'package:rahbaran/helper/style_helper.dart';
-import 'package:rahbaran/helper/widget_helper.dart';
-import 'package:rahbaran/page/forget_password.dart';
-import 'package:rahbaran/page/validation_base_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../common/national_code.dart';
+import '../helper/style_helper.dart';
+import '../helper/widget_helper.dart';
+import 'validation_base_state.dart';
 import 'dart:convert' as convert;
 
-import 'base_state.dart';
-
-class PreForgetPassword extends StatefulWidget {
+class PreRegister extends StatefulWidget {
   @override
-  PreForgetPasswordState createState() => PreForgetPasswordState();
+  PreRegisterState createState() => PreRegisterState();
 }
 
-class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
+class PreRegisterState extends ValidationBaseState<PreRegister> {
   //controllers
   TextEditingController nationalCodeController = new TextEditingController();
   TextEditingController mobileController = new TextEditingController();
@@ -47,7 +42,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
         Scaffold(
           resizeToAvoidBottomPadding: false,
           appBar: AppBar(
-            title: Text('فراموشی رمز عبور',
+            title: Text('ثبت نام',
                 style: StyleHelper.appBarTitleTextStyle),
             centerTitle: true,
             elevation: 2,
@@ -66,7 +61,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 WidgetHelper.logoHeaderSection(MediaQuery.of(context).size.width),
-                forgetPasswordSection()
+                registerSection()
               ],
             ),
           ),
@@ -77,7 +72,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
     );
   }
 
-  Widget forgetPasswordSection() {
+  Widget registerSection() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
       margin: EdgeInsets.symmetric(vertical: 20),
@@ -129,16 +124,16 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
             height: nationalTextFieldHeight,
             child: RaisedButton(
               onPressed: () {
-                forgetButtonClicked();
+                registerButtonClicked();
               },
               color: StyleHelper.mainColor,
               shape: StyleHelper.buttonRoundedRectangleBorder,
               child: isLoading
                   ? CircularProgressIndicator(
-                      valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.white))
-                  : Text('درخواست تغییر رمز',
-                      style: StyleHelper.buttonTextStyle),
+                  valueColor:
+                  new AlwaysStoppedAnimation<Color>(Colors.white))
+                  : Text('تایید و ادامه',
+                  style: StyleHelper.buttonTextStyle),
             ),
           ),
           Visibility(
@@ -156,7 +151,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
     );
   }
 
-  void forgetButtonClicked() async{
+  void registerButtonClicked() async{
     try {
       hideValidation();
       if (nationalCodeController.text.isEmpty) {
@@ -175,15 +170,15 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
       });
 
       var url =
-          'https://apimy.rmto.ir/api/Hambar/PreforgetPassword?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
+          'https://apimy.rmto.ir/api/Hambar/PreforgetPassword11?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
       var response = await getApiData(url);
       if (response != null){
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            Navigator.of(context).pushReplacement(
+            /*Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (BuildContext context) => ForgetPassword(jsonResponse['data']))
-            );
+            );*/
           });
         } else if (jsonResponse['message']['code'] == 2) {
           showValidation('کاربری با این مشخصات پیدا نشد');

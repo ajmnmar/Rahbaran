@@ -10,6 +10,7 @@ import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/home.dart';
 import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/pre_forget_password.dart';
+import 'package:rahbaran/page/pre_register.dart';
 import 'package:rahbaran/page/validation_base_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -62,7 +63,7 @@ class LoginState extends ValidationBaseState<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                WidgetHelper.loginHeaderSection(MediaQuery.of(context).size.width),
+                WidgetHelper.logoHeaderSection(MediaQuery.of(context).size.width),
                 loginSection(),
               ],
             ),
@@ -155,9 +156,7 @@ class LoginState extends ValidationBaseState<Login> {
         children: <Widget>[
           FlatButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (BuildContext context) => PreForgetPassword())
-                );
+                forgetPasswordClicked();
               },
               child: Text(
                 'فراموشی رمز عبور',
@@ -165,7 +164,9 @@ class LoginState extends ValidationBaseState<Login> {
               )),
           Text('/'),
           FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                registerClicked();
+              },
               child: Text('ثبت نام در سامانه', style: flatButtonTextStyle))
         ],
       ),
@@ -218,5 +219,17 @@ class LoginState extends ValidationBaseState<Login> {
     });
 
     signIn(usernameController.text, passwordController.text);
+  }
+
+  void forgetPasswordClicked(){
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) => PreForgetPassword())
+    );
+  }
+
+  void registerClicked() {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) => PreRegister())
+    );
   }
 }

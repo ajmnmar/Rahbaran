@@ -23,7 +23,7 @@ class WidgetHelper {
                 ))));
   }
 
-  static Widget loginHeaderSection(double width) {
+  static Widget logoHeaderSection(double width) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Image.asset(
