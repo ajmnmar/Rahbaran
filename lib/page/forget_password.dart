@@ -1,31 +1,34 @@
-import 'dart:async';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:rahbaran/common/national_code.dart';
+import 'package:rahbaran/common/ShowDialog.dart';
 import 'package:rahbaran/helper/style_helper.dart';
 import 'package:rahbaran/helper/widget_helper.dart';
-import 'package:rahbaran/page/forget_password.dart';
 import 'package:rahbaran/page/validation_base_state.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 
-import 'base_state.dart';
+class ForgetPassword extends StatefulWidget {
+  final String guid;
 
-class PreForgetPassword extends StatefulWidget {
+  ForgetPassword(this.guid);
+
   @override
-  PreForgetPasswordState createState() => PreForgetPasswordState();
+  ForgetPasswordState createState() => ForgetPasswordState(guid);
 }
 
-class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
+class ForgetPasswordState extends ValidationBaseState<ForgetPassword> {
   //controllers
-  TextEditingController nationalCodeController = new TextEditingController();
-  TextEditingController mobileController = new TextEditingController();
+  TextEditingController otpController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController rePasswordController = new TextEditingController();
 
   //variables
+  String guid;
   bool isLoading = false;
-  GlobalKey nationalTextFieldKey = GlobalKey();
-  double nationalTextFieldHeight;
+  GlobalKey otpTextFieldKey = GlobalKey();
+  double otpTextFieldHeight;
+
+  ForgetPasswordState(this.guid);
 
   @override
   void initState() {
@@ -34,8 +37,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        nationalTextFieldHeight =
-            nationalTextFieldKey.currentContext.size.height;
+        otpTextFieldHeight = otpTextFieldKey.currentContext.size.height;
       });
     });
   }
@@ -65,7 +67,8 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                WidgetHelper.loginHeaderSection(MediaQuery.of(context).size.width),
+                WidgetHelper.loginHeaderSection(
+                    MediaQuery.of(context).size.width),
                 forgetPasswordSection()
               ],
             ),
@@ -86,15 +89,15 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
           SizedBox(
             width: double.infinity,
             child: TextField(
-                key: nationalTextFieldKey,
-                controller: nationalCodeController,
+                key: otpTextFieldKey,
+                controller: otpController,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                    hintText: 'شماره ملی',
+                    hintText: 'کد پیامک شده',
                     contentPadding: EdgeInsets.all(7),
                     prefixIcon: Icon(
-                      Icons.person,
+                      Icons.input,
                       color: StyleHelper.iconColor,
                     ),
                     border: StyleHelper.textFieldBorder)),
@@ -107,14 +110,38 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
             child: Container(
               alignment: Alignment.center,
               child: TextField(
-                controller: mobileController,
-                keyboardType: TextInputType.phone,
+                controller: passwordController,
+                keyboardType: TextInputType.text,
+                obscureText: true,
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                    hintText: 'شماره موبایل',
+                    hintText: 'رمز عبور جدید',
                     contentPadding: EdgeInsets.all(7),
                     prefixIcon: Icon(
-                      Icons.phone,
+                      Icons.lock,
+                      color: StyleHelper.iconColor,
+                    ),
+                    border: StyleHelper.textFieldBorder),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              alignment: Alignment.center,
+              child: TextField(
+                controller: rePasswordController,
+                keyboardType: TextInputType.text,
+                obscureText: true,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                    hintText: 'تکرار رمز عبور جدید',
+                    contentPadding: EdgeInsets.all(7),
+                    prefixIcon: Icon(
+                      Icons.lock,
                       color: StyleHelper.iconColor,
                     ),
                     border: StyleHelper.textFieldBorder),
@@ -126,10 +153,10 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
           ),
           SizedBox(
             width: double.infinity,
-            height: nationalTextFieldHeight,
+            height: otpTextFieldHeight,
             child: RaisedButton(
               onPressed: () {
-                forgetButtonClicked();
+                changePasswordButtonClicked();
               },
               color: StyleHelper.mainColor,
               shape: StyleHelper.buttonRoundedRectangleBorder,
@@ -137,7 +164,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
                   ? CircularProgressIndicator(
                       valueColor:
                           new AlwaysStoppedAnimation<Color>(Colors.white))
-                  : Text('درخواست تغییر رمز',
+                  : Text('تایید و تغییر رمز عبور',
                       style: StyleHelper.buttonTextStyle),
             ),
           ),
@@ -156,18 +183,24 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
     );
   }
 
-  void forgetButtonClicked() async{
+  void changePasswordButtonClicked() async {
     try {
       hideValidation();
-      if (nationalCodeController.text.isEmpty) {
-        showValidation('لطفا شماره ملی خود را وارد کنید');
+      if (otpController.text.isEmpty) {
+        showValidation('لطفا کدپیامک شده را وارد کنید');
         return;
-      } else if (mobileController.text.isEmpty) {
-        showValidation('لطفا شماره موبایل خود را وارد کنید');
+      } else if (passwordController.text.isEmpty) {
+        showValidation('لطفا رمزعبور جدید را وارد کنید');
         return;
-      } else if (NationalCode.checkNationalCode(nationalCodeController.text) ==
-          false) {
-        showValidation('فرمت شماره ملی اشتباره است');
+      } else if (rePasswordController.text.isEmpty) {
+        showValidation('لطفا تکرار رمزعبور جدید را وارد کنید');
+        return;
+      } else if (rePasswordController.text.trim().length < 6) {
+        showValidation('رمز عبور باید حداقل 6 کاراکتر باشد');
+        return;
+      } else if (passwordController.text.trim() !=
+          rePasswordController.text.trim()) {
+        showValidation('رمز عبور و تکرار آن باید یکسان باشد');
         return;
       }
       setState(() {
@@ -175,23 +208,24 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
       });
 
       var url =
-          'https://apimy.rmto.ir/api/Hambar/PreforgetPassword?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
-      var response = await getApiData(url);
-      if (response != null){
+          'https://apimy.rmto.ir/api/Hambar/ForgetPassword?password=${passwordController.text}&token=$guid&otp=${otpController.text}';
+      var response = await postApiData(url);
+      if (response != null) {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) => ForgetPassword(jsonResponse['data']))
-            );
+            ShowDialog.showOkDialog(context, null, 'عملیات با موفقیت انجام شد')
+                .then((val) {
+              Navigator.of(context).pop();
+            });
           });
-        } else if (jsonResponse['message']['code'] == 2) {
-          showValidation('کاربری با این مشخصات پیدا نشد');
-        }else{
+        } else if (jsonResponse['message']['code'] == 5) {
+          showValidation('کد وارد شده صحیح نیست');
+        } else {
           showValidation('خطا در ارتباط با سرور');
         }
       }
-    }finally{
+    } finally {
       setState(() {
         isLoading = false;
       });

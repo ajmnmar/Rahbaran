@@ -62,7 +62,7 @@ class LoginState extends ValidationBaseState<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                headerSection(),
+                WidgetHelper.loginHeaderSection(MediaQuery.of(context).size.width),
                 loginSection(),
               ],
             ),
@@ -70,17 +70,6 @@ class LoginState extends ValidationBaseState<Login> {
         ),
         WidgetHelper.messageSection(messageOpacity, MediaQuery.of(context).padding.top, message)
       ],
-    );
-  }
-
-  Widget headerSection() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      margin: EdgeInsets.only(top: 40),
-      child: Image.asset(
-        "assets/images/logo.png",
-        width: MediaQuery.of(context).size.width / 2.8,
-      ),
     );
   }
 
@@ -121,7 +110,7 @@ class LoginState extends ValidationBaseState<Login> {
                   contentPadding: EdgeInsets.all(7),
                   prefixIcon: Icon(
                     Icons.vpn_key,
-                    color: Color(0xff1fd3ae),
+                    color: StyleHelper.iconColor,
                   ),
                   border: StyleHelper.textFieldBorder),
             ),

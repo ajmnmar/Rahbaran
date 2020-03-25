@@ -40,4 +40,21 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
     }
     return response;
   }
+
+  postApiData(String url) async {
+    http.Response response;
+    try {
+      response = await http.post(url).timeout(Duration(seconds: 5));
+      if (response.statusCode != 200) {
+        showMessage('خطا در اتصال به سرور!');
+      }
+    } catch (e) {
+      if (e is SocketException || e is TimeoutException) {
+        showMessage('خطا در اتصال به اینترنت!');
+      } else {
+        showMessage('خطا در اتصال به سرور!');
+      }
+    }
+    return response;
+  }
 }
