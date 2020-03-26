@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rahbaran/page/Test.dart';
 import 'package:rahbaran/page/forget_password.dart';
 import 'package:rahbaran/page/login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'BYekan',
         primaryColor: Color(0xff1fd3ae)
       ),
-      home: RegisterStep2('121-12','123456'),
+      home: RegisterStep2('12-12','12'),
     );
   }
 }

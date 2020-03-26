@@ -28,7 +28,7 @@ class WidgetHelper {
       padding: EdgeInsets.symmetric(horizontal: 30),
       child: Image.asset(
         "assets/images/logo.png",
-        width: width / 2.8,
+        width: width / 3,
       ),
     );
   }
