@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/news_details.dart';
 import 'package:rahbaran/page/pre_forget_password.dart';
+import 'package:rahbaran/page/register_step2.dart';
 
 void main() => runApp(MyApp());
 
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'BYekan',
         primaryColor: Color(0xff1fd3ae)
       ),
-      home: Login(),
+      home: RegisterStep2('121-12','123456'),
     );
   }
 }

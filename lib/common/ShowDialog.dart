@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rahbaran/helper/style_helper.dart';
 
 class ShowDialog{
   static showOkDialog(context,String title,String content) async{
@@ -13,7 +14,7 @@ class ShowDialog{
                   onPressed: (){
                     Navigator.of(context).pop();
                   },
-                  child:Text('باشه')
+                  child:Text('باشه',style: TextStyle(color: StyleHelper.mainColor),)
               )
             ],
           );

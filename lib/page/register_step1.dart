@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:rahbaran/common/mobile_mask.dart';
-import 'package:rahbaran/page/register_step1.dart';
-
-import '../common/national_code.dart';
-import '../helper/style_helper.dart';
-import '../helper/widget_helper.dart';
-import 'validation_base_state.dart';
+import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/helper/widget_helper.dart';
+import 'package:rahbaran/page/register_step2.dart';
+import 'package:rahbaran/page/validation_base_state.dart';
 import 'dart:convert' as convert;
 
-class PreRegister extends StatefulWidget {
+class RegisterStep1 extends StatefulWidget {
+  final String guid;
+
+  RegisterStep1(this.guid);
+
   @override
-  PreRegisterState createState() => PreRegisterState();
+  RegisterStep1State createState() => RegisterStep1State(guid);
 }
 
-class PreRegisterState extends ValidationBaseState<PreRegister> {
+class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
+  //const
+  static const otpLength=6;
+
   //controllers
-  TextEditingController nationalCodeController = new TextEditingController();
-  TextEditingController mobileController = new TextEditingController();
+  TextEditingController otpController = new TextEditingController();
 
   //variables
+  String guid;
   bool isLoading = false;
-  GlobalKey nationalTextFieldKey = GlobalKey();
-  double nationalTextFieldHeight;
+  GlobalKey otpTextFieldKey = GlobalKey();
+  double otpTextFieldHeight;
+
+  RegisterStep1State(this.guid);
 
   @override
   void initState() {
@@ -31,8 +37,8 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        nationalTextFieldHeight =
-            nationalTextFieldKey.currentContext.size.height;
+        otpTextFieldHeight =
+            otpTextFieldKey.currentContext.size.height;
       });
     });
   }
@@ -83,50 +89,35 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
           SizedBox(
             width: double.infinity,
             child: TextField(
-                key: nationalTextFieldKey,
-                controller: nationalCodeController,
+                key: otpTextFieldKey,
+                controller: otpController,
+                onChanged: (val){
+                  if(val.length==otpLength){
+                    register();
+                  }
+                },
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
+                maxLength: otpLength,
                 decoration: InputDecoration(
-                    hintText: 'شماره ملی',
+                    hintText: 'کد فعال سازی',
                     contentPadding: EdgeInsets.all(7),
+                    counterText: "",
                     prefixIcon: Icon(
-                      Icons.person,
+                      Icons.input,
                       color: StyleHelper.iconColor,
                     ),
                     border: StyleHelper.textFieldBorder)),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
-              child: TextField(
-                controller: mobileController,
-                keyboardType: TextInputType.phone,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'شماره موبایل',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
-              ),
-            ),
           ),
           SizedBox(
             height: 15,
           ),
           SizedBox(
             width: double.infinity,
-            height: nationalTextFieldHeight,
+            height: otpTextFieldHeight,
             child: RaisedButton(
               onPressed: () {
-                registerButtonClicked();
+                register();
               },
               color: StyleHelper.mainColor,
               shape: StyleHelper.buttonRoundedRectangleBorder,
@@ -153,18 +144,11 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
     );
   }
 
-  void registerButtonClicked() async{
+  void register() async {
     try {
       hideValidation();
-      if (nationalCodeController.text.isEmpty) {
-        showValidation('لطفا شماره ملی خود را وارد کنید');
-        return;
-      } else if (mobileController.text.isEmpty) {
-        showValidation('لطفا شماره موبایل خود را وارد کنید');
-        return;
-      } else if (NationalCode.checkNationalCode(nationalCodeController.text) ==
-          false) {
-        showValidation('فرمت شماره ملی اشتباره است');
+      if (otpController.text.isEmpty) {
+        showValidation('لطفا کد فعال سازی را وارد کنید');
         return;
       }
       setState(() {
@@ -172,24 +156,18 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
       });
 
       var url =
-          'https://apimy.rmto.ir/api/Hambar/PreRegistration?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
+          'https://apimy.rmto.ir/api/Hambar/RegistrationStep1?token=$guid&otp=${otpController.text}';
       var response = await getApiData(url);
       if (response != null){
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) => RegisterStep1(jsonResponse['data']))
+                MaterialPageRoute(builder: (BuildContext context) => RegisterStep2(jsonResponse['data'],otpController.text))
             );
           });
-        }else if (jsonResponse['message']['code'] == 1) {
-          showValidation('برای این کاربر شماره موبایل ثبت نشده است');
-        }else if (jsonResponse['message']['code'] == 2) {
-          showValidation('کاربری با این مشخصات پیدا نشد');
-        } else if (jsonResponse['message']['code'] == 3) {
-          showValidation('شما با شماره موبایل ${MobileMask.changeMobileMaskDirection(jsonResponse['data'])} در سامانه مرکزی ثبت نام کرده اید');
-        } else if (jsonResponse['message']['code'] == 4) {
-          showValidation('کاربر با این مشخصات پیشتر ثبت نام کرده است');
+        }else if (jsonResponse['message']['code'] == 5) {
+          showValidation('کد فعال سازی اشتباه است');
         }else{
           showValidation('خطا در ارتباط با سرور');
         }
