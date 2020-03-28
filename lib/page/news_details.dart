@@ -1,26 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:rahbaran/data_model/news_model.dart';
+import 'package:rahbaran/helper/widget_helper.dart';
 
-class NewsDetails extends StatelessWidget {
+import 'base_state.dart';
+
+class NewsDetails extends StatefulWidget {
   final NewsModel news;
 
   NewsDetails(this.news);
 
   @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return NewsDetailsState(this.news);
+  }
+}
+
+class NewsDetailsState extends BaseState<NewsDetails> {
+  final NewsModel news;
+
+  NewsDetailsState(this.news);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getToken().then((val) {
+      getCurrentUser().then((val) {
+        setState(() {});
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('جزئیات خبر'),
-        centerTitle: true,
-        elevation: 2,
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.arrow_forward), onPressed: (){
-            Navigator.of(context).pop();
-          })
-        ],
-      ),
-      body: newsBody(context),
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+            appBar: AppBar(
+              title: Text('جزئیات خبر1'),
+              centerTitle: true,
+              elevation: 2,
+              actions: <Widget>[
+                IconButton(icon: Icon(Icons.arrow_forward), onPressed: (){
+                  Navigator.of(context).pop();
+                })
+              ],
+            ),
+            drawer:mainDrawer(),
+            body: newsBody(context)),
+        WidgetHelper.messageSection(messageOpacity,
+            MediaQuery.of(context).padding.top, message, messageVisibility, () {
+              setState(() {
+                messageVisibility = messageOpacity == 0 ? false : true;
+              });
+            })
+      ],
     );
   }
 
@@ -62,3 +98,4 @@ class NewsDetails extends StatelessWidget {
     );
   }
 }
+

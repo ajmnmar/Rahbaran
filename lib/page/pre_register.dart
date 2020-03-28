@@ -42,10 +42,8 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
     return Stack(
       children: <Widget>[
         Scaffold(
-          resizeToAvoidBottomPadding: false,
           appBar: AppBar(
-            title: Text('ثبت نام',
-                style: StyleHelper.appBarTitleTextStyle),
+            title: Text('ثبت نام', style: StyleHelper.appBarTitleTextStyle),
             centerTitle: true,
             elevation: 2,
             automaticallyImplyLeading: false,
@@ -62,98 +60,106 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                WidgetHelper.logoHeaderSection(MediaQuery.of(context).size.width),
+                WidgetHelper.logoHeaderSection(
+                    MediaQuery.of(context).size.width),
                 registerSection()
               ],
             ),
           ),
         ),
         WidgetHelper.messageSection(
-            messageOpacity, MediaQuery.of(context).padding.top, message)
+            messageOpacity, MediaQuery.of(context).padding.top, message,messageVisibility,(){
+          setState(() {
+            messageVisibility= messageOpacity==0?false:true;
+          });
+        })
       ],
     );
   }
 
   Widget registerSection() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      margin: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            width: double.infinity,
-            child: TextField(
-                key: nationalTextFieldKey,
-                controller: nationalCodeController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'شماره ملی',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder)),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        margin: EdgeInsets.symmetric(vertical: 20),
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              width: double.infinity,
               child: TextField(
-                controller: mobileController,
-                keyboardType: TextInputType.phone,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'شماره موبایل',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
+                  key: nationalTextFieldKey,
+                  controller: nationalCodeController,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                      hintText: 'شماره ملی',
+                      contentPadding: EdgeInsets.all(7),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: StyleHelper.iconColor,
+                      ),
+                      border: StyleHelper.textFieldBorder)),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Container(
+                alignment: Alignment.center,
+                child: TextField(
+                  controller: mobileController,
+                  keyboardType: TextInputType.phone,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                      hintText: 'شماره موبایل',
+                      contentPadding: EdgeInsets.all(7),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: StyleHelper.iconColor,
+                      ),
+                      border: StyleHelper.textFieldBorder),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: nationalTextFieldHeight,
-            child: RaisedButton(
-              onPressed: () {
-                registerButtonClicked();
-              },
-              color: StyleHelper.mainColor,
-              shape: StyleHelper.buttonRoundedRectangleBorder,
-              child: isLoading
-                  ? CircularProgressIndicator(
-                  valueColor:
-                  new AlwaysStoppedAnimation<Color>(Colors.white))
-                  : Text('تایید و ادامه',
-                  style: StyleHelper.buttonTextStyle),
+            SizedBox(
+              height: 15,
             ),
-          ),
-          Visibility(
-            visible: validationVisibility,
-            child: Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                validationMessage,
-                style: StyleHelper.validationTextStyle,
+            SizedBox(
+              width: double.infinity,
+              height: nationalTextFieldHeight,
+              child: RaisedButton(
+                onPressed: () {
+                  if (isLoading) return;
+                  registerButtonClicked();
+                },
+                color: StyleHelper.mainColor,
+                shape: StyleHelper.buttonRoundedRectangleBorder,
+                child: isLoading
+                    ? CircularProgressIndicator(
+                        valueColor:
+                            new AlwaysStoppedAnimation<Color>(Colors.white))
+                    : Text('تایید و ادامه', style: StyleHelper.buttonTextStyle),
               ),
             ),
-          ),
-        ],
+            Visibility(
+              visible: validationVisibility,
+              child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 10),
+                child: Text(
+                  validationMessage,
+                  style: StyleHelper.validationTextStyle,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void registerButtonClicked() async{
+  void registerButtonClicked() async {
     try {
       hideValidation();
       if (nationalCodeController.text.isEmpty) {
@@ -174,27 +180,28 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
       var url =
           'https://apimy.rmto.ir/api/Hambar/PreRegistration?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
       var response = await getApiData(url);
-      if (response != null){
+      if (response != null) {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) => RegisterStep1(jsonResponse['data']))
-            );
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    RegisterStep1(jsonResponse['data'])));
           });
-        }else if (jsonResponse['message']['code'] == 1) {
+        } else if (jsonResponse['message']['code'] == 1) {
           showValidation('برای این کاربر شماره موبایل ثبت نشده است');
-        }else if (jsonResponse['message']['code'] == 2) {
+        } else if (jsonResponse['message']['code'] == 2) {
           showValidation('کاربری با این مشخصات پیدا نشد');
         } else if (jsonResponse['message']['code'] == 3) {
-          showValidation('شما با شماره موبایل ${MobileMask.changeMobileMaskDirection(jsonResponse['data'])} در سامانه مرکزی ثبت نام کرده اید');
+          showValidation(
+              'شما با شماره موبایل ${MobileMask.changeMobileMaskDirection(jsonResponse['data'])} در سامانه مرکزی ثبت نام کرده اید');
         } else if (jsonResponse['message']['code'] == 4) {
           showValidation('کاربر با این مشخصات پیشتر ثبت نام کرده است');
-        }else{
+        } else {
           showValidation('خطا در ارتباط با سرور');
         }
       }
-    }finally{
+    } finally {
       setState(() {
         isLoading = false;
       });

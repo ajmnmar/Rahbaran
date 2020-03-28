@@ -45,7 +45,6 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
     return Stack(
       children: <Widget>[
         Scaffold(
-          resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             title: Text('فراموشی رمز عبور',
                 style: StyleHelper.appBarTitleTextStyle),
@@ -65,98 +64,107 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                WidgetHelper.logoHeaderSection(MediaQuery.of(context).size.width),
+                WidgetHelper.logoHeaderSection(
+                    MediaQuery.of(context).size.width),
                 forgetPasswordSection()
               ],
             ),
           ),
         ),
         WidgetHelper.messageSection(
-            messageOpacity, MediaQuery.of(context).padding.top, message)
+            messageOpacity, MediaQuery.of(context).padding.top, message,messageVisibility,(){
+          setState(() {
+            messageVisibility= messageOpacity==0?false:true;
+          });
+        })
       ],
     );
   }
 
   Widget forgetPasswordSection() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      margin: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            width: double.infinity,
-            child: TextField(
-                key: nationalTextFieldKey,
-                controller: nationalCodeController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'شماره ملی',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder)),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30),
+        margin: EdgeInsets.symmetric(vertical: 20),
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              width: double.infinity,
               child: TextField(
-                controller: mobileController,
-                keyboardType: TextInputType.phone,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'شماره موبایل',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
+                  key: nationalTextFieldKey,
+                  controller: nationalCodeController,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                      hintText: 'شماره ملی',
+                      contentPadding: EdgeInsets.all(7),
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: StyleHelper.iconColor,
+                      ),
+                      border: StyleHelper.textFieldBorder)),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Container(
+                alignment: Alignment.center,
+                child: TextField(
+                  controller: mobileController,
+                  keyboardType: TextInputType.phone,
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                      hintText: 'شماره موبایل',
+                      contentPadding: EdgeInsets.all(7),
+                      prefixIcon: Icon(
+                        Icons.phone,
+                        color: StyleHelper.iconColor,
+                      ),
+                      border: StyleHelper.textFieldBorder),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: nationalTextFieldHeight,
-            child: RaisedButton(
-              onPressed: () {
-                forgetButtonClicked();
-              },
-              color: StyleHelper.mainColor,
-              shape: StyleHelper.buttonRoundedRectangleBorder,
-              child: isLoading
-                  ? CircularProgressIndicator(
-                      valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.white))
-                  : Text('درخواست تغییر رمز',
-                      style: StyleHelper.buttonTextStyle),
+            SizedBox(
+              height: 15,
             ),
-          ),
-          Visibility(
-            visible: validationVisibility,
-            child: Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                validationMessage,
-                style: StyleHelper.validationTextStyle,
+            SizedBox(
+              width: double.infinity,
+              height: nationalTextFieldHeight,
+              child: RaisedButton(
+                onPressed: () {
+                  if (isLoading) return;
+                  forgetButtonClicked();
+                },
+                color: StyleHelper.mainColor,
+                shape: StyleHelper.buttonRoundedRectangleBorder,
+                child: isLoading
+                    ? CircularProgressIndicator(
+                        valueColor:
+                            new AlwaysStoppedAnimation<Color>(Colors.white))
+                    : Text('درخواست تغییر رمز',
+                        style: StyleHelper.buttonTextStyle),
               ),
             ),
-          ),
-        ],
+            Visibility(
+              visible: validationVisibility,
+              child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 10),
+                child: Text(
+                  validationMessage,
+                  style: StyleHelper.validationTextStyle,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void forgetButtonClicked() async{
+  void forgetButtonClicked() async {
     try {
       hideValidation();
       if (nationalCodeController.text.isEmpty) {
@@ -177,21 +185,21 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
       var url =
           'https://apimy.rmto.ir/api/Hambar/PreforgetPassword?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
       var response = await getApiData(url);
-      if (response != null){
+      if (response != null) {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (BuildContext context) => ForgetPassword(jsonResponse['data']))
-            );
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    ForgetPassword(jsonResponse['data'])));
           });
         } else if (jsonResponse['message']['code'] == 2) {
           showValidation('کاربری با این مشخصات پیدا نشد');
-        }else{
+        } else {
           showValidation('خطا در ارتباط با سرور');
         }
       }
-    }finally{
+    } finally {
       setState(() {
         isLoading = false;
       });

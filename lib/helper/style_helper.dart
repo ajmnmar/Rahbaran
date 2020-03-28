@@ -11,4 +11,10 @@ class StyleHelper{
       color: Colors.black,
       decoration: TextDecoration.none);
   static TextStyle appBarTitleTextStyle=TextStyle(fontSize: 18,fontWeight: FontWeight.w500);
+
+  //برای نمایش خالی بودن صفحه
+  static TextStyle emptyTextStyle = TextStyle(color: mainColor, fontSize: 20);
+
+  //برای نمایش آیتم های دراور
+  static TextStyle drawerItemTextStyle=TextStyle(fontSize: 18,fontWeight: FontWeight.w300);
 }
