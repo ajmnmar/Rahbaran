@@ -83,7 +83,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       } else if (response.statusCode != 200) {
         showMessage('خطا در اتصال به سرور!');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (e is SocketException || e is TimeoutException) {
         showMessage('خطا در اتصال به اینترنت!');
       } else {
@@ -106,7 +106,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       if (response.statusCode != 200) {
         showMessage('خطا در اتصال به سرور!');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (e is SocketException || e is TimeoutException) {
         showMessage('خطا در اتصال به اینترنت!');
       } else {

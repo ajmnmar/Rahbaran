@@ -39,7 +39,7 @@ class NewsDetailsState extends BaseState<NewsDetails> {
       children: <Widget>[
         Scaffold(
             appBar: AppBar(
-              title: Text('جزئیات خبر1'),
+              title: Text('جزئیات خبر'),
               centerTitle: true,
               elevation: 2,
               actions: <Widget>[

@@ -63,17 +63,17 @@ class LoginState extends ValidationBaseState<Login> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 WidgetHelper.logoHeaderSection(
-                    MediaQuery.of(context).size.width,40),
+                    MediaQuery.of(context).size.width, 40),
                 loginSection(),
               ],
             ),
           ),
         ),
-        WidgetHelper.messageSection(
-            messageOpacity, MediaQuery.of(context).padding.top, message,messageVisibility,(){
-              setState(() {
-                messageVisibility= messageOpacity==0?false:true;
-              });
+        WidgetHelper.messageSection(messageOpacity,
+            MediaQuery.of(context).padding.top, message, messageVisibility, () {
+          setState(() {
+            messageVisibility = messageOpacity == 0 ? false : true;
+          });
         })
       ],
     );
@@ -196,7 +196,7 @@ class LoginState extends ValidationBaseState<Login> {
           sharedPreferences.setString('token', jsonResponse['data']['token']);
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (BuildContext context) => News()),
-                  (Route<dynamic> rout) => false);
+              (Route<dynamic> rout) => false);
         } else if (jsonResponse['message']['code'] == 6) {
           showValidation('نام کاربری یا رمز عبور اشتباه است');
         }
