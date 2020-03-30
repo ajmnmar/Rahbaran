@@ -64,12 +64,32 @@ class NewsState extends BaseState<News> {
               centerTitle: true,
               elevation: 2,
             ),
-            drawer:mainDrawer(),
+            drawer: mainDrawer(),
             body: BlocBuilder(
-            bloc:loadingBloc,
-            builder: (context,LoadingState state){
-              return newsListBody(state);
-            })
+                bloc: loadingBloc,
+                builder: (context, LoadingState state) {
+                  return newsListBody(state);
+                }),
+          bottomNavigationBar: BottomNavigationBar(
+            //currentIndex: _selectedIndex,
+            ///selectedItemColor: Colors.amber[800],
+            //unselectedItemColor:Colors.black,
+            //onTap: _onItemTapped,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.mail),
+                title: Text('اخبار'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.local_shipping),
+                title: Text('لیست ناوگان'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.description),
+                title: Text('اسنادحمل'),
+              ),
+            ],
+          ),
         ),
         messageSection(errorBloc),
       ],

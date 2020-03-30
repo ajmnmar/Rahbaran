@@ -7,7 +7,7 @@ import 'package:rahbaran/data_model/user_model.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 
 class WidgetHelper {
-  static Widget messageSection(
+  static Widget messageSection1(
       double messageOpacity, double containerTop, String message,
       [bool messageVisibility, onEnd]) {
     return Visibility(
@@ -44,6 +44,7 @@ class WidgetHelper {
     );
   }
 }
+
  messageSection(ErrorBloc errorBloc) {
   return BlocBuilder(
       bloc: errorBloc,
