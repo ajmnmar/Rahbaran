@@ -2,9 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:rahbaran/bloc/error_bloc.dart';
+import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/data_model/news_model.dart';
-import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/news_details.dart';
 import 'dart:convert' as convert;
@@ -30,19 +33,19 @@ class NewsState extends BaseState<News> {
       TextStyle(color: StyleHelper.mainColor, fontSize: 16);
 
   List<NewsModel> newsList;
-  bool isLoading = true;
+  LoadingBloc loadingBloc = new LoadingBloc();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    isLoading = true;
+    loadingBloc.add(LoadingEvent.show);
     getToken().then((val) {
       getNews().then((list) {
         setState(() {
           newsList = list;
-          isLoading = false;
+          loadingBloc.add(LoadingEvent.hide);
         });
       });
       getCurrentUser().then((val) {
@@ -62,19 +65,19 @@ class NewsState extends BaseState<News> {
               elevation: 2,
             ),
             drawer:mainDrawer(),
-            body: newsListBody()),
-        WidgetHelper.messageSection(messageOpacity,
-            MediaQuery.of(context).padding.top, message, messageVisibility, () {
-          setState(() {
-            messageVisibility = messageOpacity == 0 ? false : true;
-          });
-        })
+            body: BlocBuilder(
+            bloc:loadingBloc,
+            builder: (context,LoadingState state){
+              return newsListBody(state);
+            })
+        ),
+        messageSection(errorBloc),
       ],
     );
   }
 
-  Widget newsListBody() {
-    if (isLoading) {
+  Widget newsListBody(LoadingState state) {
+    if (state.isLoading) {
       return Center(
           child: CircularProgressIndicator(
               valueColor:
@@ -84,7 +87,7 @@ class NewsState extends BaseState<News> {
         return Center(
           child: Text(
             'خبری برای نمایش وجود ندارد!',
-            style: StyleHelper.emptyTextStyle,
+            style: Theme.of(context).textTheme.subhead,
           ),
         );
       } else {
@@ -177,7 +180,7 @@ class NewsState extends BaseState<News> {
             newsJsonList.map((news) => NewsModel.fromJson(news)).toList();
         return newsList;
       } else {
-        showMessage('خطا در ارتباط با سرور');
+        errorBloc.add(ShowErrorEvent('خطا در ارتباط با سرور'));
       }
     }
   }

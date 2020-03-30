@@ -23,6 +23,7 @@ dependencies:
     sdk: flutter
   http: ^0.12.0+4
   shared_preferences: ^0.5.6+3
+  flutter_bloc: ^3.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -48,6 +49,7 @@ flutter:
   assets:
    - assets/images/logo.png
    - assets/images/driverempty.png
+   - assets/images/plate.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

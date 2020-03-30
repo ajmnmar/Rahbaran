@@ -4,8 +4,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rahbaran/bloc/error_bloc.dart';
 import 'package:rahbaran/data_model/user_model.dart';
-import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/page/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
@@ -14,27 +15,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   final int httpRequestTimeout = 10;
 
   String token;
-  String message = '';
-  double messageOpacity = 0;
-  bool messageVisibility = false;
-  Timer messageTimer;
   UserModel currentUser;
-
-  void showMessage(String message) {
-    if (messageTimer != null) {
-      messageTimer.cancel();
-    }
-    setState(() {
-      this.message = message;
-      this.messageOpacity = 1;
-      this.messageVisibility = true;
-    });
-    messageTimer = new Timer(Duration(seconds: 3), () {
-      setState(() {
-        this.messageOpacity = 0;
-      });
-    });
-  }
+  ErrorBloc errorBloc = new ErrorBloc();
 
   getToken() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -67,7 +49,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       if (jsonResponse['message']['code'] == 0) {
         currentUser = UserModel.fromJson(jsonResponse['data']);
       } else {
-        showMessage('خطا در ارتباط با سرور');
+        errorBloc.add(ShowErrorEvent('خطا در ارتباط با سرور'));
       }
     }
   }
@@ -81,13 +63,13 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       if (response.statusCode == 401) {
         logout();
       } else if (response.statusCode != 200) {
-        showMessage('خطا در اتصال به سرور!');
+        errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
       }
     } on Exception catch (e) {
       if (e is SocketException || e is TimeoutException) {
-        showMessage('خطا در اتصال به اینترنت!');
+        errorBloc.add(ShowErrorEvent('خطا در اتصال به اینترنت!'));
       } else {
-        showMessage('خطا در اتصال به سرور!');
+        errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
       }
     }
     return response;
@@ -104,13 +86,13 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
             .post(url, headers: headers, body: body)
             .timeout(Duration(seconds: httpRequestTimeout));
       if (response.statusCode != 200) {
-        showMessage('خطا در اتصال به سرور!');
+        errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
       }
     } on Exception catch (e) {
       if (e is SocketException || e is TimeoutException) {
-        showMessage('خطا در اتصال به اینترنت!');
+        errorBloc.add(ShowErrorEvent('خطا در اتصال به اینترنت!'));
       } else {
-        showMessage('خطا در اتصال به سرور!');
+        errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
       }
     }
     return response;
@@ -154,7 +136,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           ListTile(
             title: Text(
               'اخبار',
-              style: StyleHelper.drawerItemTextStyle,
+              style: Theme.of(context).textTheme.body2,
             ),
             leading: Icon(
               Icons.mail,
@@ -164,7 +146,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           ListTile(
             title: Text(
               'لیست ناوگان',
-              style: StyleHelper.drawerItemTextStyle,
+              style: Theme.of(context).textTheme.body2,
             ),
             leading: Icon(
               Icons.local_shipping,
@@ -174,7 +156,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           ListTile(
             title: Text(
               'لیست اسناد حمل',
-              style: StyleHelper.drawerItemTextStyle,
+              style: Theme.of(context).textTheme.body2,
             ),
             leading: Icon(
               Icons.description,
@@ -184,7 +166,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           ListTile(
             title: Text(
               'درباره ما',
-              style: StyleHelper.drawerItemTextStyle,
+              style: Theme.of(context).textTheme.body2,
             ),
             leading: Icon(
               Icons.info,
@@ -194,7 +176,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
           ListTile(
             title: Text(
               'خروج',
-              style: StyleHelper.drawerItemTextStyle,
+              style: Theme.of(context).textTheme.body2,
             ),
             leading: Icon(
               Icons.power_settings_new,

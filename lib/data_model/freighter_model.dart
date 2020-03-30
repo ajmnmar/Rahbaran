@@ -31,7 +31,7 @@ class FreighterModel{
         json['plaqueSerial'],
         json['loaderType'],
         json['cardNumber'],
-        json['technicalExaminationDate'],
+        json['technicalExaminationDate']==null?null:json['technicalExaminationDate'].toString(),
         json['system'],
         json['type'],
         json['axis'],

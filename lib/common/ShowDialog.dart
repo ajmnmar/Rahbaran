@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/theme/style_helper.dart';
 
 class ShowDialog{
   static showOkDialog(context,String title,String content) async{

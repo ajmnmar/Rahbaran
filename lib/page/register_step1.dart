@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/bloc/loading_bloc.dart';
+import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/data_model/user_model.dart';
-import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/register_step2.dart';
-import 'package:rahbaran/page/validation_base_state.dart';
 import 'dart:convert' as convert;
+
+import 'base_state.dart';
 
 class RegisterStep1 extends StatefulWidget {
   final String guid;
@@ -16,7 +20,7 @@ class RegisterStep1 extends StatefulWidget {
   RegisterStep1State createState() => RegisterStep1State(guid);
 }
 
-class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
+class RegisterStep1State extends BaseState<RegisterStep1> {
   //const
   static const otpLength = 6;
 
@@ -24,8 +28,9 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
   TextEditingController otpController = new TextEditingController();
 
   //variables
+  ValidationBloc validationBloc = new ValidationBloc();
+  LoadingBloc loadingBloc = new LoadingBloc();
   String guid;
-  bool isLoading = false;
   GlobalKey otpTextFieldKey = GlobalKey();
   double otpTextFieldHeight;
 
@@ -49,7 +54,7 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text('ثبت نام', style: StyleHelper.appBarTitleTextStyle),
+            title: Text('ثبت نام', style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
             automaticallyImplyLeading: false,
@@ -73,12 +78,7 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
             ),
           ),
         ),
-        WidgetHelper.messageSection(
-            messageOpacity, MediaQuery.of(context).padding.top, message,messageVisibility,(){
-          setState(() {
-            messageVisibility= messageOpacity==0?false:true;
-          });
-        })
+        messageSection(errorBloc),
       ],
     );
   }
@@ -102,6 +102,7 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
                 },
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption,
                 maxLength: otpLength,
                 decoration: InputDecoration(
                     hintText: 'کد فعال سازی',
@@ -111,7 +112,7 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
                       Icons.input,
                       color: StyleHelper.iconColor,
                     ),
-                    border: StyleHelper.textFieldBorder)),
+                    )),
           ),
           SizedBox(
             height: 15,
@@ -119,31 +120,36 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
           SizedBox(
             width: double.infinity,
             height: otpTextFieldHeight,
-            child: RaisedButton(
-              onPressed: () {
-                if (isLoading) return;
-                register();
-              },
-              color: StyleHelper.mainColor,
-              shape: StyleHelper.buttonRoundedRectangleBorder,
-              child: isLoading
-                  ? CircularProgressIndicator(
-                      valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.white))
-                  : Text('تایید و ادامه', style: StyleHelper.buttonTextStyle),
+            child: BlocBuilder(
+                bloc:loadingBloc,
+                builder: (context,LoadingState state){
+                  return RaisedButton(
+                      onPressed: () {
+                        if (state.isLoading) return;
+                        register();
+                      },
+                      child: state.isLoading? CircularProgressIndicator(
+                          valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white)):
+                      Text('تایید و ادامه', style: Theme.of(context).textTheme.button));
+                }
             ),
           ),
-          Visibility(
-            visible: validationVisibility,
-            child: Container(
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                validationMessage,
-                style: StyleHelper.validationTextStyle,
-              ),
-            ),
-          ),
+          BlocBuilder(
+              bloc: validationBloc,
+              builder: (context, ValidationState state) {
+                return Visibility(
+                  visible: state.validationVisibility,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                      state.validationMessage,
+                      style: Theme.of(context).textTheme.display1,
+                    ),
+                  ),
+                );
+              }),
         ],
       ),
     ));
@@ -151,14 +157,12 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
 
   void register() async {
     try {
-      hideValidation();
+      validationBloc.add(HideValidationEvent());
       if (otpController.text.isEmpty) {
-        showValidation('لطفا کد فعال سازی را وارد کنید');
+        validationBloc.add(ShowValidationEvent('لطفا کد فعال سازی را وارد کنید'));
         return;
       }
-      setState(() {
-        isLoading = true;
-      });
+      loadingBloc.add(LoadingEvent.show);
 
       var url =
           'https://apimy.rmto.ir/api/Hambar/RegistrationStep1?token=$guid&otp=${otpController.text}';
@@ -174,15 +178,13 @@ class RegisterStep1State extends ValidationBaseState<RegisterStep1> {
                     UserModel.fromJson(jsonResponse['data']))));
           });
         } else if (jsonResponse['message']['code'] == 5) {
-          showValidation('کد فعال سازی اشتباه است');
+          validationBloc.add(ShowValidationEvent('کد فعال سازی اشتباه است'));
         } else {
-          showValidation('خطا در ارتباط با سرور');
+          validationBloc.add(ShowValidationEvent('خطا در ارتباط با سرور'));
         }
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      loadingBloc.add(LoadingEvent.hide);
     }
   }
 }

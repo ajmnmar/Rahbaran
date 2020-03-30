@@ -4,19 +4,23 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/bloc/error_bloc.dart';
+import 'package:rahbaran/bloc/loading_bloc.dart';
+import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
-import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/home.dart';
 import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/pre_forget_password.dart';
 import 'package:rahbaran/page/pre_register.dart';
-import 'package:rahbaran/page/validation_base_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 import 'base_state.dart';
+import 'freighter.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -26,15 +30,18 @@ class Login extends StatefulWidget {
   }
 }
 
-class LoginState extends ValidationBaseState<Login> {
-  TextStyle flatButtonTextStyle = TextStyle(color: Colors.blue, fontSize: 17);
+class LoginState extends BaseState<Login> {
+  //style
+  TextStyle loginFlatButtonTextStyle =
+  TextStyle(color: Colors.blue, fontSize: 17);
 
   //controllers
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
 
   //variables
-  bool isLoading = false;
+  ValidationBloc validationBloc = new ValidationBloc();
+  LoadingBloc loadingBloc = new LoadingBloc();
   GlobalKey nationalTextFieldKey = GlobalKey();
   double nationalTextFieldHeight;
 
@@ -69,13 +76,7 @@ class LoginState extends ValidationBaseState<Login> {
             ),
           ),
         ),
-        WidgetHelper.messageSection(messageOpacity,
-            MediaQuery.of(context).padding.top, message, messageVisibility, () {
-          setState(() {
-            messageVisibility = messageOpacity == 0 ? false : true;
-          });
-        })
-      ],
+        messageSection(errorBloc),      ],
     );
   }
 
@@ -92,14 +93,15 @@ class LoginState extends ValidationBaseState<Login> {
                   controller: usernameController,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption,
                   decoration: InputDecoration(
-                      hintText: 'شماره ملی',
-                      contentPadding: EdgeInsets.all(7),
-                      prefixIcon: Icon(
-                        Icons.person,
-                        color: StyleHelper.iconColor,
-                      ),
-                      border: StyleHelper.textFieldBorder)),
+                    hintText: 'شماره ملی',
+                    contentPadding: EdgeInsets.all(7),
+                    prefixIcon: Icon(
+                      Icons.person,
+                      color: StyleHelper.iconColor,
+                    ),
+                  )),
             ),
             SizedBox(
               height: 10,
@@ -111,14 +113,15 @@ class LoginState extends ValidationBaseState<Login> {
                 keyboardType: TextInputType.text,
                 obscureText: true,
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption,
                 decoration: InputDecoration(
-                    hintText: 'کلمه عبور',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.vpn_key,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
+                  hintText: 'کلمه عبور',
+                  contentPadding: EdgeInsets.all(7),
+                  prefixIcon: Icon(
+                    Icons.vpn_key,
+                    color: StyleHelper.iconColor,
+                  ),
+                ),
               ),
             ),
             SizedBox(
@@ -127,31 +130,36 @@ class LoginState extends ValidationBaseState<Login> {
             SizedBox(
               width: double.infinity,
               height: nationalTextFieldHeight,
-              child: RaisedButton(
-                onPressed: () {
-                  if (isLoading) return;
-                  loginButtonClicked();
-                },
-                color: StyleHelper.mainColor,
-                shape: StyleHelper.buttonRoundedRectangleBorder,
-                child: isLoading
-                    ? CircularProgressIndicator(
-                        valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.white))
-                    : Text('ورود', style: StyleHelper.buttonTextStyle),
+              child: BlocBuilder(
+                  bloc:loadingBloc,
+                  builder: (context,LoadingState state){
+                    return RaisedButton(
+                        onPressed: () {
+                          if (state.isLoading) return;
+                          loginButtonClicked();
+                        },
+                        child: state.isLoading? CircularProgressIndicator(
+                            valueColor:
+                            new AlwaysStoppedAnimation<Color>(Colors.white)):
+                        Text('ورود', style: Theme.of(context).textTheme.button));
+                    }
               ),
             ),
-            Visibility(
-              visible: validationVisibility,
-              child: Container(
-                alignment: Alignment.center,
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  validationMessage,
-                  style: StyleHelper.validationTextStyle,
-                ),
-              ),
-            ),
+            BlocBuilder(
+                bloc: validationBloc,
+                builder: (context, ValidationState state) {
+                  return Visibility(
+                    visible: state.validationVisibility,
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
+                        state.validationMessage,
+                        style: Theme.of(context).textTheme.display1,
+                      ),
+                    ),
+                  );
+                }),
             alternativeAction(),
           ],
         ),
@@ -170,14 +178,14 @@ class LoginState extends ValidationBaseState<Login> {
               },
               child: Text(
                 'فراموشی رمز عبور',
-                style: flatButtonTextStyle,
+                style: loginFlatButtonTextStyle,
               )),
           Text('/'),
           FlatButton(
               onPressed: () {
                 registerClicked();
               },
-              child: Text('ثبت نام در سامانه', style: flatButtonTextStyle))
+              child: Text('ثبت نام در سامانه', style: loginFlatButtonTextStyle))
         ],
       ),
     );
@@ -186,7 +194,7 @@ class LoginState extends ValidationBaseState<Login> {
   void signIn(String username, String password) async {
     try {
       SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
+      await SharedPreferences.getInstance();
       var url =
           'https://apimy.rmto.ir/api/Hambar/Authenticate?username=$username&password=$password';
       var response = await getApiData(url);
@@ -196,34 +204,30 @@ class LoginState extends ValidationBaseState<Login> {
           sharedPreferences.setString('token', jsonResponse['data']['token']);
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (BuildContext context) => News()),
-              (Route<dynamic> rout) => false);
+                  (Route<dynamic> rout) => false);
         } else if (jsonResponse['message']['code'] == 6) {
-          showValidation('نام کاربری یا رمز عبور اشتباه است');
+          validationBloc.add(ShowValidationEvent('نام کاربری یا رمز عبور اشتباه است'));
         }
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      loadingBloc.add(LoadingEvent.hide);
     }
   }
 
   void loginButtonClicked() async {
-    hideValidation();
+    validationBloc.add(HideValidationEvent());
     if (usernameController.text.isEmpty) {
-      showValidation('لطفا شماره ملی خود را وارد کنید');
+      validationBloc.add(ShowValidationEvent('لطفا شماره ملی خود را وارد کنید'));
       return;
     } else if (passwordController.text.isEmpty) {
-      showValidation('لطفا رمز عبور خود را وارد کنید');
+      validationBloc.add(ShowValidationEvent('لطفا رمز عبور خود را وارد کنید'));
       return;
     } else if (NationalCode.checkNationalCode(usernameController.text) ==
         false) {
-      showValidation('فرمت شماره ملی اشتباره است');
+      validationBloc.add(ShowValidationEvent('فرمت شماره ملی اشتباره است'));
       return;
     }
-    setState(() {
-      isLoading = true;
-    });
+    loadingBloc.add(LoadingEvent.show);
 
     signIn(usernameController.text, passwordController.text);
   }

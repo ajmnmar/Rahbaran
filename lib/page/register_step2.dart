@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/bloc/loading_bloc.dart';
+import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/mobile_mask.dart';
 import 'package:rahbaran/data_model/user_model.dart';
-import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/helper/widget_helper.dart';
-import 'package:rahbaran/page/validation_base_state.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'base_state.dart';
 import 'news.dart';
 
 class RegisterStep2 extends StatefulWidget {
@@ -23,7 +26,7 @@ class RegisterStep2 extends StatefulWidget {
   RegisterStep2State createState() => RegisterStep2State(this.guid, this.otp,this.userModel);
 }
 
-class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
+class RegisterStep2State extends BaseState<RegisterStep2> {
   //controllers
   TextEditingController emailController = new TextEditingController();
   TextEditingController nationalCodeController = new TextEditingController();
@@ -33,10 +36,11 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
   TextEditingController rePasswordController = new TextEditingController();
 
   //variables
+  ValidationBloc validationBloc = new ValidationBloc();
+  LoadingBloc loadingBloc = new LoadingBloc();
   String guid;
   String otp;
   UserModel userModel;
-  bool isLoading = false;
   GlobalKey emailTextFieldKey = GlobalKey();
   double emailTextFieldHeight;
 
@@ -60,7 +64,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text('ثبت نام', style: StyleHelper.appBarTitleTextStyle),
+            title: Text('ثبت نام', style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
             automaticallyImplyLeading: false,
@@ -87,12 +91,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
             ),
           ),
         ),
-        WidgetHelper.messageSection(
-            messageOpacity, MediaQuery.of(context).padding.top, message,messageVisibility,(){
-          setState(() {
-            messageVisibility= messageOpacity==0?false:true;
-          });
-        })
+        messageSection(errorBloc),
       ],
     );
   }
@@ -111,6 +110,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.caption,
                     decoration: InputDecoration(
                         hintText: 'ایمیل',
                         contentPadding: EdgeInsets.all(7),
@@ -118,7 +118,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                           Icons.email,
                           color: StyleHelper.iconColor,
                         ),
-                        border: StyleHelper.textFieldBorder)),
+                        )),
               ),
               SizedBox(
                 height: 10,
@@ -131,13 +131,14 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                     controller: nationalCodeController,
                     enabled: false,
                     textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.caption,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(7),
                         prefixIcon: Icon(
                           Icons.person,
                           color: StyleHelper.iconColor,
                         ),
-                        border: StyleHelper.textFieldBorder),
+                        ),
                   ),
                 ),
               ),
@@ -152,13 +153,14 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                     controller: nameController,
                     enabled: false,
                     textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.caption,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(7),
                         prefixIcon: Icon(
                           Icons.perm_identity,
                           color: StyleHelper.iconColor,
                         ),
-                        border: StyleHelper.textFieldBorder),
+                        ),
                   ),
                 ),
               ),
@@ -173,13 +175,14 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                     controller: mobileController,
                     enabled: false,
                     textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.caption,
                     decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(7),
                         prefixIcon: Icon(
                           Icons.phone,
                           color: StyleHelper.iconColor,
                         ),
-                        border: StyleHelper.textFieldBorder),
+                        ),
                   ),
                 ),
               ),
@@ -195,6 +198,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.caption,
                     decoration: InputDecoration(
                         hintText: 'کلمه عبور',
                         contentPadding: EdgeInsets.all(7),
@@ -202,7 +206,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                           Icons.lock,
                           color: StyleHelper.iconColor,
                         ),
-                        border: StyleHelper.textFieldBorder),
+                        ),
                   ),
                 ),
               ),
@@ -218,6 +222,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.caption,
                     decoration: InputDecoration(
                         hintText: 'تکرار کلمه عبور',
                         contentPadding: EdgeInsets.all(7),
@@ -225,7 +230,7 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
                           Icons.lock,
                           color: StyleHelper.iconColor,
                         ),
-                        border: StyleHelper.textFieldBorder),
+                        ),
                   ),
                 ),
               ),
@@ -235,222 +240,59 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
               SizedBox(
                 width: double.infinity,
                 height: emailTextFieldHeight,
-                child: RaisedButton(
-                  onPressed: () {
-                    registerButtonClicked();
-                  },
-                  color: StyleHelper.mainColor,
-                  shape: StyleHelper.buttonRoundedRectangleBorder,
-                  child: isLoading
-                      ? CircularProgressIndicator(
-                      valueColor:
-                      new AlwaysStoppedAnimation<Color>(Colors.white))
-                      : Text('تایید نهایی', style: StyleHelper.buttonTextStyle),
+                child:BlocBuilder(
+                    bloc:loadingBloc,
+                    builder: (context,LoadingState state){
+                      return RaisedButton(
+                          onPressed: () {
+                            if (state.isLoading) return;
+                            registerButtonClicked();
+                          },
+                          child: state.isLoading? CircularProgressIndicator(
+                              valueColor:
+                              new AlwaysStoppedAnimation<Color>(Colors.white)):
+                          Text('تایید نهایی', style: Theme.of(context).textTheme.button));
+                    }
                 ),
               ),
-              Visibility(
-                visible: validationVisibility,
-                child: Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    validationMessage,
-                    style: StyleHelper.validationTextStyle,
-                  ),
-                ),
-              ),
+              BlocBuilder(
+                  bloc: validationBloc,
+                  builder: (context, ValidationState state) {
+                    return Visibility(
+                      visible: state.validationVisibility,
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(top: 10),
+                        child: Text(
+                          state.validationMessage,
+                          style: Theme.of(context).textTheme.display1,
+                        ),
+                      ),
+                    );
+                  }),
             ],
           ),
         ));
   }
 
-  Widget registerSection1() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      margin: EdgeInsets.symmetric(vertical: 20),
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            width: double.infinity,
-            child: TextField(
-                key: emailTextFieldKey,
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'ایمیل',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.email,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder)),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
-              child: TextField(
-                controller: nationalCodeController,
-                enabled: false,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
-              child: TextField(
-                controller: nameController,
-                enabled: false,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.perm_identity,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
-              child: TextField(
-                controller: mobileController,
-                enabled: false,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
-              child: TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.text,
-                obscureText: true,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'کلمه عبور',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.lock,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Container(
-              alignment: Alignment.center,
-              child: TextField(
-                controller: rePasswordController,
-                keyboardType: TextInputType.text,
-                obscureText: true,
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                    hintText: 'تکرار کلمه عبور',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.lock,
-                      color: StyleHelper.iconColor,
-                    ),
-                    border: StyleHelper.textFieldBorder),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: emailTextFieldHeight,
-            child: RaisedButton(
-              onPressed: () {
-                if(isLoading)
-                  return;
-                registerButtonClicked();
-              },
-              color: StyleHelper.mainColor,
-              shape: StyleHelper.buttonRoundedRectangleBorder,
-              child: isLoading
-                  ? CircularProgressIndicator(
-                  valueColor:
-                  new AlwaysStoppedAnimation<Color>(Colors.white))
-                  : Text('تایید نهایی', style: StyleHelper.buttonTextStyle),
-            ),
-          ),
-          Visibility(
-            visible: validationVisibility,
-            child: Container(
-              margin: EdgeInsets.only(top: 10),
-              child: Text(
-                validationMessage,
-                style: StyleHelper.validationTextStyle,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   void registerButtonClicked() async {
     try {
-      hideValidation();
+      validationBloc.add(HideValidationEvent());
       if (passwordController.text.isEmpty) {
-        showValidation('لطفا کلمه عبور را وارد کنید');
+        validationBloc.add(ShowValidationEvent('لطفا کلمه عبور را وارد کنید'));
         return;
       } else if (rePasswordController.text.isEmpty) {
-        showValidation('لطفا تکرار کلمه عبور را وارد کنید');
+        validationBloc.add(ShowValidationEvent('لطفا تکرار کلمه عبور را وارد کنید'));
         return;
       } else if (passwordController.text.trim().length < 6) {
-        showValidation('کلمه عبور باید حداقل 6 کاراکتر باشد');
+        validationBloc.add(ShowValidationEvent('کلمه عبور باید حداقل 6 کاراکتر باشد'));
         return;
       } else if (passwordController.text.trim() !=
           rePasswordController.text.trim()) {
-        showValidation('رمز عبور و تکرار آن باید یکسان باشد');
+        validationBloc.add(ShowValidationEvent('رمز عبور و تکرار آن باید یکسان باشد'));
         return;
       }
-      setState(() {
-        isLoading = true;
-      });
+      loadingBloc.add(LoadingEvent.show);
 
       var url =
           'https://apimy.rmto.ir/api/Hambar/RegistrationStep2?password=${passwordController.text}&token=$guid&otp=$otp';
@@ -464,21 +306,19 @@ class RegisterStep2State extends ValidationBaseState<RegisterStep2> {
               MaterialPageRoute(builder: (BuildContext context) => News()),
                   (Route<dynamic> rout) => false);
         }else if (jsonResponse['message']['code'] == 1) {
-          showValidation('برای این کاربر شماره موبایل ثبت نشده است');
+          validationBloc.add(ShowValidationEvent('برای این کاربر شماره موبایل ثبت نشده است'));
         }else if (jsonResponse['message']['code'] == 2) {
-          showValidation('کاربری با این مشخصات پیدا نشد');
+          validationBloc.add(ShowValidationEvent('کاربری با این مشخصات پیدا نشد'));
         } else if (jsonResponse['message']['code'] == 3) {
-          showValidation('شما با شماره موبایل ${MobileMask.changeMobileMaskDirection(jsonResponse['data'])} در سامانه مرکزی ثبت نام کرده اید');
+          validationBloc.add(ShowValidationEvent('شما با شماره موبایل ${MobileMask.changeMobileMaskDirection(jsonResponse['data'])} در سامانه مرکزی ثبت نام کرده اید'));
         }else if (jsonResponse['message']['code'] == 5) {
-          showValidation('کد فعال سازی اشتباه است');
+          validationBloc.add(ShowValidationEvent('کد فعال سازی اشتباه است'));
         }else{
-          showValidation('خطا در ارتباط با سرور');
+          validationBloc.add(ShowValidationEvent('خطا در ارتباط با سرور'));
         }
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      loadingBloc.add(LoadingEvent.hide);
     }
   }
 }

@@ -50,12 +50,7 @@ class NewsDetailsState extends BaseState<NewsDetails> {
             ),
             drawer:mainDrawer(),
             body: newsBody(context)),
-        WidgetHelper.messageSection(messageOpacity,
-            MediaQuery.of(context).padding.top, message, messageVisibility, () {
-              setState(() {
-                messageVisibility = messageOpacity == 0 ? false : true;
-              });
-            })
+        messageSection(errorBloc),
       ],
     );
   }

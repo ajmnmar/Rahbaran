@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/bloc/loading_bloc.dart';
+import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
-import 'package:rahbaran/helper/style_helper.dart';
+import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/forget_password.dart';
-import 'package:rahbaran/page/validation_base_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 
@@ -17,13 +19,14 @@ class PreForgetPassword extends StatefulWidget {
   PreForgetPasswordState createState() => PreForgetPasswordState();
 }
 
-class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
+class PreForgetPasswordState extends BaseState<PreForgetPassword> {
   //controllers
   TextEditingController nationalCodeController = new TextEditingController();
   TextEditingController mobileController = new TextEditingController();
 
   //variables
-  bool isLoading = false;
+  ValidationBloc validationBloc = new ValidationBloc();
+  LoadingBloc loadingBloc = new LoadingBloc();
   GlobalKey nationalTextFieldKey = GlobalKey();
   double nationalTextFieldHeight;
 
@@ -47,7 +50,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
         Scaffold(
           appBar: AppBar(
             title: Text('فراموشی رمز عبور',
-                style: StyleHelper.appBarTitleTextStyle),
+                style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
             automaticallyImplyLeading: false,
@@ -71,12 +74,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
             ),
           ),
         ),
-        WidgetHelper.messageSection(
-            messageOpacity, MediaQuery.of(context).padding.top, message,messageVisibility,(){
-          setState(() {
-            messageVisibility= messageOpacity==0?false:true;
-          });
-        })
+        messageSection(errorBloc),
       ],
     );
   }
@@ -95,6 +93,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
                   controller: nationalCodeController,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption,
                   decoration: InputDecoration(
                       hintText: 'شماره ملی',
                       contentPadding: EdgeInsets.all(7),
@@ -102,7 +101,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
                         Icons.person,
                         color: StyleHelper.iconColor,
                       ),
-                      border: StyleHelper.textFieldBorder)),
+                      )),
             ),
             SizedBox(
               height: 10,
@@ -115,6 +114,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
                   controller: mobileController,
                   keyboardType: TextInputType.phone,
                   textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption,
                   decoration: InputDecoration(
                       hintText: 'شماره موبایل',
                       contentPadding: EdgeInsets.all(7),
@@ -122,7 +122,7 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
                         Icons.phone,
                         color: StyleHelper.iconColor,
                       ),
-                      border: StyleHelper.textFieldBorder),
+                      ),
                 ),
               ),
             ),
@@ -132,32 +132,36 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
             SizedBox(
               width: double.infinity,
               height: nationalTextFieldHeight,
-              child: RaisedButton(
-                onPressed: () {
-                  if (isLoading) return;
-                  forgetButtonClicked();
-                },
-                color: StyleHelper.mainColor,
-                shape: StyleHelper.buttonRoundedRectangleBorder,
-                child: isLoading
-                    ? CircularProgressIndicator(
-                        valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.white))
-                    : Text('درخواست تغییر رمز',
-                        style: StyleHelper.buttonTextStyle),
+              child:BlocBuilder(
+                  bloc:loadingBloc,
+                  builder: (context,LoadingState state){
+                    return RaisedButton(
+                        onPressed: () {
+                          if (state.isLoading) return;
+                          forgetButtonClicked();
+                        },
+                        child: state.isLoading? CircularProgressIndicator(
+                            valueColor:
+                            new AlwaysStoppedAnimation<Color>(Colors.white)):
+                        Text('درخواست تغییر رمز', style: Theme.of(context).textTheme.button));
+                  }
               ),
             ),
-            Visibility(
-              visible: validationVisibility,
-              child: Container(
-                alignment: Alignment.center,
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  validationMessage,
-                  style: StyleHelper.validationTextStyle,
-                ),
-              ),
-            ),
+            BlocBuilder(
+                bloc: validationBloc,
+                builder: (context, ValidationState state) {
+                  return Visibility(
+                    visible: state.validationVisibility,
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
+                        state.validationMessage,
+                        style: Theme.of(context).textTheme.display1,
+                      ),
+                    ),
+                  );
+                }),
           ],
         ),
       ),
@@ -166,21 +170,19 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
 
   void forgetButtonClicked() async {
     try {
-      hideValidation();
+      validationBloc.add(HideValidationEvent());
       if (nationalCodeController.text.isEmpty) {
-        showValidation('لطفا شماره ملی خود را وارد کنید');
+        validationBloc.add(ShowValidationEvent('لطفا شماره ملی خود را وارد کنید'));
         return;
       } else if (mobileController.text.isEmpty) {
-        showValidation('لطفا شماره موبایل خود را وارد کنید');
+        validationBloc.add(ShowValidationEvent('لطفا شماره موبایل خود را وارد کنید'));
         return;
       } else if (NationalCode.checkNationalCode(nationalCodeController.text) ==
           false) {
-        showValidation('فرمت شماره ملی اشتباره است');
+        validationBloc.add(ShowValidationEvent('فرمت شماره ملی اشتباره است'));
         return;
       }
-      setState(() {
-        isLoading = true;
-      });
+      loadingBloc.add(LoadingEvent.show);
 
       var url =
           'https://apimy.rmto.ir/api/Hambar/PreforgetPassword?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
@@ -194,15 +196,13 @@ class PreForgetPasswordState extends ValidationBaseState<PreForgetPassword> {
                     ForgetPassword(jsonResponse['data'])));
           });
         } else if (jsonResponse['message']['code'] == 2) {
-          showValidation('کاربری با این مشخصات پیدا نشد');
+          validationBloc.add(ShowValidationEvent('کاربری با این مشخصات پیدا نشد'));
         } else {
-          showValidation('خطا در ارتباط با سرور');
+          validationBloc.add(ShowValidationEvent('خطا در ارتباط با سرور'));
         }
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      loadingBloc.add(LoadingEvent.hide);
     }
   }
 }

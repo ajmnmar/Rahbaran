@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/bloc/loading_bloc.dart';
+import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/mobile_mask.dart';
 import 'package:rahbaran/page/register_step1.dart';
 
 import '../common/national_code.dart';
-import '../helper/style_helper.dart';
+import '../theme/style_helper.dart';
 import '../helper/widget_helper.dart';
-import 'validation_base_state.dart';
+import 'base_state.dart';
 import 'dart:convert' as convert;
 
 class PreRegister extends StatefulWidget {
@@ -14,13 +17,14 @@ class PreRegister extends StatefulWidget {
   PreRegisterState createState() => PreRegisterState();
 }
 
-class PreRegisterState extends ValidationBaseState<PreRegister> {
+class PreRegisterState extends BaseState<PreRegister> {
   //controllers
   TextEditingController nationalCodeController = new TextEditingController();
   TextEditingController mobileController = new TextEditingController();
 
   //variables
-  bool isLoading = false;
+  ValidationBloc validationBloc = new ValidationBloc();
+  LoadingBloc loadingBloc = new LoadingBloc();
   GlobalKey nationalTextFieldKey = GlobalKey();
   double nationalTextFieldHeight;
 
@@ -43,7 +47,7 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text('ثبت نام', style: StyleHelper.appBarTitleTextStyle),
+            title: Text('ثبت نام', style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
             automaticallyImplyLeading: false,
@@ -67,12 +71,7 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
             ),
           ),
         ),
-        WidgetHelper.messageSection(
-            messageOpacity, MediaQuery.of(context).padding.top, message,messageVisibility,(){
-          setState(() {
-            messageVisibility= messageOpacity==0?false:true;
-          });
-        })
+        messageSection(errorBloc),
       ],
     );
   }
@@ -91,6 +90,7 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
                   controller: nationalCodeController,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption,
                   decoration: InputDecoration(
                       hintText: 'شماره ملی',
                       contentPadding: EdgeInsets.all(7),
@@ -98,7 +98,7 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
                         Icons.person,
                         color: StyleHelper.iconColor,
                       ),
-                      border: StyleHelper.textFieldBorder)),
+                      )),
             ),
             SizedBox(
               height: 10,
@@ -111,6 +111,7 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
                   controller: mobileController,
                   keyboardType: TextInputType.phone,
                   textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption,
                   decoration: InputDecoration(
                       hintText: 'شماره موبایل',
                       contentPadding: EdgeInsets.all(7),
@@ -118,7 +119,7 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
                         Icons.phone,
                         color: StyleHelper.iconColor,
                       ),
-                      border: StyleHelper.textFieldBorder),
+                      ),
                 ),
               ),
             ),
@@ -128,31 +129,36 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
             SizedBox(
               width: double.infinity,
               height: nationalTextFieldHeight,
-              child: RaisedButton(
-                onPressed: () {
-                  if (isLoading) return;
-                  registerButtonClicked();
-                },
-                color: StyleHelper.mainColor,
-                shape: StyleHelper.buttonRoundedRectangleBorder,
-                child: isLoading
-                    ? CircularProgressIndicator(
-                        valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.white))
-                    : Text('تایید و ادامه', style: StyleHelper.buttonTextStyle),
+              child: BlocBuilder(
+                  bloc:loadingBloc,
+                  builder: (context,LoadingState state){
+                    return RaisedButton(
+                        onPressed: () {
+                          if (state.isLoading) return;
+                          registerButtonClicked();
+                        },
+                        child: state.isLoading? CircularProgressIndicator(
+                            valueColor:
+                            new AlwaysStoppedAnimation<Color>(Colors.white)):
+                        Text('تایید و ادامه', style: Theme.of(context).textTheme.button));
+                  }
               ),
             ),
-            Visibility(
-              visible: validationVisibility,
-              child: Container(
-                alignment: Alignment.center,
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  validationMessage,
-                  style: StyleHelper.validationTextStyle,
-                ),
-              ),
-            ),
+            BlocBuilder(
+                bloc: validationBloc,
+                builder: (context, ValidationState state) {
+                  return Visibility(
+                    visible: state.validationVisibility,
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
+                        state.validationMessage,
+                        style: Theme.of(context).textTheme.display1,
+                      ),
+                    ),
+                  );
+                }),
           ],
         ),
       ),
@@ -161,21 +167,19 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
 
   void registerButtonClicked() async {
     try {
-      hideValidation();
+      validationBloc.add(HideValidationEvent());
       if (nationalCodeController.text.isEmpty) {
-        showValidation('لطفا شماره ملی خود را وارد کنید');
+        validationBloc.add(ShowValidationEvent('لطفا شماره ملی خود را وارد کنید'));
         return;
       } else if (mobileController.text.isEmpty) {
-        showValidation('لطفا شماره موبایل خود را وارد کنید');
+        validationBloc.add(ShowValidationEvent('لطفا شماره موبایل خود را وارد کنید'));
         return;
       } else if (NationalCode.checkNationalCode(nationalCodeController.text) ==
           false) {
-        showValidation('فرمت شماره ملی اشتباره است');
+        validationBloc.add(ShowValidationEvent('فرمت شماره ملی اشتباره است'));
         return;
       }
-      setState(() {
-        isLoading = true;
-      });
+      loadingBloc.add(LoadingEvent.show);
 
       var url =
           'https://apimy.rmto.ir/api/Hambar/PreRegistration?nationalCode=${nationalCodeController.text}&mobileNumber=${mobileController.text}';
@@ -189,22 +193,19 @@ class PreRegisterState extends ValidationBaseState<PreRegister> {
                     RegisterStep1(jsonResponse['data'])));
           });
         } else if (jsonResponse['message']['code'] == 1) {
-          showValidation('برای این کاربر شماره موبایل ثبت نشده است');
+          validationBloc.add(ShowValidationEvent('برای این کاربر شماره موبایل ثبت نشده است'));
         } else if (jsonResponse['message']['code'] == 2) {
-          showValidation('کاربری با این مشخصات پیدا نشد');
+          validationBloc.add(ShowValidationEvent('کاربری با این مشخصات پیدا نشد'));
         } else if (jsonResponse['message']['code'] == 3) {
-          showValidation(
-              'شما با شماره موبایل ${MobileMask.changeMobileMaskDirection(jsonResponse['data'])} در سامانه مرکزی ثبت نام کرده اید');
+          validationBloc.add(ShowValidationEvent('شما با شماره موبایل ${MobileMask.changeMobileMaskDirection(jsonResponse['data'])} در سامانه مرکزی ثبت نام کرده اید'));
         } else if (jsonResponse['message']['code'] == 4) {
-          showValidation('کاربر با این مشخصات پیشتر ثبت نام کرده است');
+          validationBloc.add(ShowValidationEvent('کاربر با این مشخصات پیشتر ثبت نام کرده است'));
         } else {
-          showValidation('خطا در ارتباط با سرور');
+          validationBloc.add(ShowValidationEvent('خطا در ارتباط با سرور'));
         }
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      loadingBloc.add(LoadingEvent.hide);
     }
   }
 }
