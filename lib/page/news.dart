@@ -4,16 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
+import 'package:rahbaran/Widget/main_drawer.dart';
+import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/bloc/error_bloc.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/data_model/news_model.dart';
 import 'package:rahbaran/theme/style_helper.dart';
-import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/news_details.dart';
 import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'base_authorized_state.dart';
 import 'base_state.dart';
+import 'freighter.dart';
 import 'login.dart';
 
 class News extends StatefulWidget {
@@ -24,16 +28,17 @@ class News extends StatefulWidget {
   }
 }
 
-class NewsState extends BaseState<News> {
-  TextStyle newsTitleTextStyle =
-      TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600);
+class NewsState extends BaseAuthorizedState<News> {
+  //style
   TextStyle newsDateTextStyle = TextStyle(color: Colors.grey, fontSize: 16);
-  TextStyle newsBodyTextStyle = TextStyle(color: Colors.black, fontSize: 16);
   TextStyle detailsButtonTextStyle =
       TextStyle(color: StyleHelper.mainColor, fontSize: 16);
 
+  //variable
   List<NewsModel> newsList;
   LoadingBloc loadingBloc = new LoadingBloc();
+
+  NewsState():super(0);
 
   @override
   void initState() {
@@ -64,34 +69,15 @@ class NewsState extends BaseState<News> {
               centerTitle: true,
               elevation: 2,
             ),
-            drawer: mainDrawer(),
+            drawer: MainDrawer(currentUser),
             body: BlocBuilder(
                 bloc: loadingBloc,
                 builder: (context, LoadingState state) {
                   return newsListBody(state);
                 }),
-          bottomNavigationBar: BottomNavigationBar(
-            //currentIndex: _selectedIndex,
-            ///selectedItemColor: Colors.amber[800],
-            //unselectedItemColor:Colors.black,
-            //onTap: _onItemTapped,
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.mail),
-                title: Text('اخبار'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.local_shipping),
-                title: Text('لیست ناوگان'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.description),
-                title: Text('اسنادحمل'),
-              ),
-            ],
-          ),
+          bottomNavigationBar: MainBottomNavigationBar(bottomNavigationSelectedIndex),
         ),
-        messageSection(errorBloc),
+        Message(errorBloc),
       ],
     );
   }
@@ -141,7 +127,7 @@ class NewsState extends BaseState<News> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(news.messageTitle, style: newsTitleTextStyle),
+                          Text(news.messageTitle, style: Theme.of(context).textTheme.title),
                           SizedBox(
                             height: 15,
                           ),
@@ -163,7 +149,7 @@ class NewsState extends BaseState<News> {
                 Container(
                   child: Text(
                     '${news.messageBody.substring(0, 120)}...',
-                    style: newsBodyTextStyle,
+                    style: Theme.of(context).textTheme.body1,
                   ),
                 ),
                 Container(

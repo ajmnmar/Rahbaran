@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/Widget/logo_header.dart';
+import 'package:rahbaran/Widget/message.dart';
+import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/mobile_mask.dart';
@@ -8,7 +11,6 @@ import 'package:rahbaran/page/register_step1.dart';
 
 import '../common/national_code.dart';
 import '../theme/style_helper.dart';
-import '../helper/widget_helper.dart';
 import 'base_state.dart';
 import 'dart:convert' as convert;
 
@@ -64,14 +66,13 @@ class PreRegisterState extends BaseState<PreRegister> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                WidgetHelper.logoHeaderSection(
-                    MediaQuery.of(context).size.width),
+                LogoHeader(),
                 registerSection()
               ],
             ),
           ),
         ),
-        messageSection(errorBloc),
+        Message(errorBloc),
       ],
     );
   }
@@ -147,17 +148,7 @@ class PreRegisterState extends BaseState<PreRegister> {
             BlocBuilder(
                 bloc: validationBloc,
                 builder: (context, ValidationState state) {
-                  return Visibility(
-                    visible: state.validationVisibility,
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(
-                        state.validationMessage,
-                        style: Theme.of(context).textTheme.display1,
-                      ),
-                    ),
-                  );
+                  return PrimaryValidation(state.validationVisibility,state.validationMessage);
                 }),
           ],
         ),

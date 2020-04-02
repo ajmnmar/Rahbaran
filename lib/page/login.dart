@@ -5,22 +5,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rahbaran/bloc/error_bloc.dart';
+import 'package:rahbaran/Widget/logo_header.dart';
+import 'package:rahbaran/Widget/message.dart';
+import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
 import 'package:rahbaran/theme/style_helper.dart';
-import 'package:rahbaran/helper/widget_helper.dart';
-import 'package:rahbaran/page/home.dart';
 import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/pre_forget_password.dart';
 import 'package:rahbaran/page/pre_register.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-
 import 'base_state.dart';
-import 'freighter.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -69,14 +66,13 @@ class LoginState extends BaseState<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                WidgetHelper.logoHeaderSection(
-                    MediaQuery.of(context).size.width, 40),
+                LogoHeader(40),
                 loginSection(),
               ],
             ),
           ),
         ),
-        messageSection(errorBloc),      ],
+        Message(errorBloc),      ],
     );
   }
 
@@ -148,17 +144,7 @@ class LoginState extends BaseState<Login> {
             BlocBuilder(
                 bloc: validationBloc,
                 builder: (context, ValidationState state) {
-                  return Visibility(
-                    visible: state.validationVisibility,
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(
-                        state.validationMessage,
-                        style: Theme.of(context).textTheme.display1,
-                      ),
-                    ),
-                  );
+                  return PrimaryValidation(state.validationVisibility,state.validationMessage);
                 }),
             alternativeAction(),
           ],
@@ -172,20 +158,28 @@ class LoginState extends BaseState<Login> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          FlatButton(
-              onPressed: () {
-                forgetPasswordClicked();
-              },
-              child: Text(
-                'فراموشی رمز عبور',
-                style: loginFlatButtonTextStyle,
-              )),
-          Text('/'),
-          FlatButton(
-              onPressed: () {
-                registerClicked();
-              },
-              child: Text('ثبت نام در سامانه', style: loginFlatButtonTextStyle))
+          Expanded(
+            child: FlatButton(
+                onPressed: () {
+                  forgetPasswordClicked();
+                },
+                child: Text(
+                  'فراموشی رمز عبور',
+                  textAlign: TextAlign.center,
+                  style: loginFlatButtonTextStyle,
+                )),
+          ),
+          Text('/',textAlign: TextAlign.center,),
+          Expanded(
+            child: FlatButton(
+                onPressed: () {
+                  registerClicked();
+                },
+                child: Text('ثبت نام در سامانه',
+                    textAlign: TextAlign.center,
+                    style: loginFlatButtonTextStyle)
+            ),
+          )
         ],
       ),
     );

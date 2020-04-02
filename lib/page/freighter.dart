@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/Widget/grid_cell.dart';
+import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
+import 'package:rahbaran/Widget/main_drawer.dart';
+import 'package:rahbaran/Widget/message.dart';
+import 'package:rahbaran/Widget/plaque.dart';
 import 'package:rahbaran/bloc/error_bloc.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/common/plaque_id_direction.dart';
 import 'package:rahbaran/data_model/freighter_model.dart';
+import 'package:rahbaran/page/freighter_details.dart';
 import 'package:rahbaran/theme/style_helper.dart';
-import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/base_state.dart';
 import 'dart:convert' as convert;
+
+import 'base_authorized_state.dart';
 
 class Freighter extends StatefulWidget {
   @override
   FreighterState createState() => FreighterState();
 }
 
-class FreighterState extends BaseState<Freighter> {
-  //style
-  TextStyle plateTextStyle = TextStyle(fontSize: 18);
-
+class FreighterState extends BaseAuthorizedState<Freighter> {
   //variables
   List<FreighterModel> freighterList;
   LoadingBloc loadingBloc = new LoadingBloc();
+
+  FreighterState():super(1);
 
   @override
   void initState() {
@@ -51,14 +57,15 @@ class FreighterState extends BaseState<Freighter> {
             centerTitle: true,
             elevation: 2,
           ),
-          drawer: mainDrawer(),
+          drawer: MainDrawer(currentUser),
           body: BlocBuilder(
               bloc: loadingBloc,
               builder: (context, LoadingState state) {
                 return freighterListBody(state);
               }),
+          bottomNavigationBar: MainBottomNavigationBar(bottomNavigationSelectedIndex),
         ),
-        messageSection(errorBloc),
+        Message(errorBloc),
       ],
     );
   }
@@ -92,41 +99,73 @@ class FreighterState extends BaseState<Freighter> {
     return Card(
         margin: EdgeInsets.all(10),
         child: GestureDetector(
+          onTap: (){
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (BuildContext context) => FreighterDetails(freighter)));
+          },
           child: Container(
             padding: EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
-                Container(
-                    height: 45,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: Image.asset('assets/images/plate.png').image,
-                        fit: BoxFit.fill,
+                Plaque(freighter.plaqueSerial, freighter.plaqueId),
+                Divider(
+                  color: Colors.black12,
+                  height: 20,
+                  thickness: 1,
+                  endIndent: MediaQuery.of(context).size.width * .08,
+                  indent: MediaQuery.of(context).size.width * .08,
+                ),
+                Column(
+                  children: <Widget>[
+                    
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          PrimaryGridCell('شماره کارت هوشمند:'),
+                          PrimaryGridCell(freighter.cardNumber),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.only(top: 5, right: 10),
-                          child: Text(
-                            freighter.plaqueSerial,
-                            style: plateTextStyle,
-                          ),
-                        ),
-                        Expanded(
-                            child: Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            PlaqueIdDirection.changePlaqueIdDirection(
-                                freighter.plaqueId),
-                            style: plateTextStyle,
-                          ),
-                        ))
-                      ],
-                    )),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          SecondaryGridCell('اعتبار معاینه فنی:'),
+                          SecondaryGridCell(freighter.technicalExaminationDate),
+                        ],
+                      ),
+                    ),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          PrimaryGridCell('بارگیر:'),
+                          PrimaryGridCell(freighter.loaderType.toString()),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ));
+  }
+
+  freighterCard1(FreighterModel freighter) {
+    return Card(
+        margin: EdgeInsets.all(10),
+        child: GestureDetector(
+          onTap: (){
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (BuildContext context) => FreighterDetails(freighter)));
+          },
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: <Widget>[
+                Plaque(freighter.plaqueSerial, freighter.plaqueId),
                 Divider(
                   color: Colors.black12,
                   height: 20,

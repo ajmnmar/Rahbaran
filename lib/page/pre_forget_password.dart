@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rahbaran/Widget/logo_header.dart';
+import 'package:rahbaran/Widget/message.dart';
+import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
 import 'package:rahbaran/theme/style_helper.dart';
-import 'package:rahbaran/helper/widget_helper.dart';
 import 'package:rahbaran/page/forget_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
@@ -67,14 +69,13 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                WidgetHelper.logoHeaderSection(
-                    MediaQuery.of(context).size.width),
+                LogoHeader(),
                 forgetPasswordSection()
               ],
             ),
           ),
         ),
-        messageSection(errorBloc),
+        Message(errorBloc),
       ],
     );
   }
@@ -150,17 +151,7 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
             BlocBuilder(
                 bloc: validationBloc,
                 builder: (context, ValidationState state) {
-                  return Visibility(
-                    visible: state.validationVisibility,
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(
-                        state.validationMessage,
-                        style: Theme.of(context).textTheme.display1,
-                      ),
-                    ),
-                  );
+                  return PrimaryValidation(state.validationVisibility,state.validationMessage);
                 }),
           ],
         ),

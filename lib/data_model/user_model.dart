@@ -11,6 +11,7 @@ class UserModel {
   String mobile;
   String email;
   String userImageAddress;
+  int userModeId;
   UserMode userMode;
 
   UserModel(
@@ -23,6 +24,7 @@ class UserModel {
       this.mobile,
       this.email,
       this.userImageAddress,
+      this.userModeId,
       this.userMode);
 
   userModeName(){
@@ -39,7 +41,7 @@ class UserModel {
 
   factory UserModel.fromJson(dynamic json) {
     return UserModel(
-        json['id'],
+        json['id'].toString(),
         json['firstname'],
         json['lastname'],
         json['fullName'],
@@ -48,19 +50,23 @@ class UserModel {
         json['mobile'],
         json['email'],
         json['userImageAddress'],
+        json['userModeId'],
         UserMode.values[json['userModeId']]
     );
   }
 
   toJson() {
     return convert.json.encode({
+      'id':id,
       'firstName': firstName,
       'lastName': lastName,
       'fullName': fullName,
       'companyName': companyName,
       'nationalCode': nationalCode,
       'mobile': mobile,
-      'email': email
+      'email': email,
+      'userImageAddress':userImageAddress,
+      'userModeId':userModeId
     });
   }
 }

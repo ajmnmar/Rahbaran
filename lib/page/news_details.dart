@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
+import 'package:rahbaran/Widget/main_drawer.dart';
+import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/data_model/news_model.dart';
-import 'package:rahbaran/helper/widget_helper.dart';
-
+import 'base_authorized_state.dart';
 import 'base_state.dart';
 
 class NewsDetails extends StatefulWidget {
@@ -16,7 +18,8 @@ class NewsDetails extends StatefulWidget {
   }
 }
 
-class NewsDetailsState extends BaseState<NewsDetails> {
+class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
+  //variable
   final NewsModel news;
 
   NewsDetailsState(this.news);
@@ -43,21 +46,21 @@ class NewsDetailsState extends BaseState<NewsDetails> {
               centerTitle: true,
               elevation: 2,
               actions: <Widget>[
-                IconButton(icon: Icon(Icons.arrow_forward), onPressed: (){
-                  Navigator.of(context).pop();
-                })
+                IconButton(
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    })
               ],
             ),
-            drawer:mainDrawer(),
+            drawer: MainDrawer(currentUser),
+            bottomNavigationBar:
+                MainBottomNavigationBar(bottomNavigationSelectedIndex),
             body: newsBody(context)),
-        messageSection(errorBloc),
+        Message(errorBloc),
       ],
     );
   }
-
-  TextStyle newsTitleTextStyle =
-  TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold);
-  TextStyle newsBodyTextStyle = TextStyle(color: Colors.black, fontSize: 17);
 
   newsBody(context) {
     return Card(
@@ -67,8 +70,8 @@ class NewsDetailsState extends BaseState<NewsDetails> {
           Container(
             padding: EdgeInsets.all(10),
             alignment: Alignment.center,
-            height: MediaQuery.of(context).size.height*.4,
-            child:Image.network(news.messageImageAddress,fit: BoxFit.fill),
+            height: MediaQuery.of(context).size.height * .35,
+            child: Image.network(news.messageImageAddress, fit: BoxFit.fill),
           ),
           Container(
             padding: EdgeInsets.all(10),
@@ -78,13 +81,20 @@ class NewsDetailsState extends BaseState<NewsDetails> {
           ),
           Container(
             padding: EdgeInsets.all(10),
-            child: Text(news.messageTitle,style: newsTitleTextStyle,),
+            child: Text(
+              news.messageTitle,
+              style: Theme.of(context).textTheme.title,
+            ),
           ),
           new Expanded(
             child: Container(
-              padding: EdgeInsets.only(left: 10,right: 10,bottom: 10),
+              padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
               child: new SingleChildScrollView(
-                child: new Text(news.messageBody,style: newsBodyTextStyle,textAlign: TextAlign.justify,),
+                child: new Text(
+                  news.messageBody,
+                  style: Theme.of(context).textTheme.body1,
+                  textAlign: TextAlign.justify,
+                ),
               ),
             ),
           ),
@@ -93,4 +103,3 @@ class NewsDetailsState extends BaseState<NewsDetails> {
     );
   }
 }
-
