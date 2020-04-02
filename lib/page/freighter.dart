@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rahbaran/Widget/grid_cell.dart';
 import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
-import 'package:rahbaran/Widget/main_drawer.dart';
+import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/Widget/plaque.dart';
 import 'package:rahbaran/bloc/error_bloc.dart';
@@ -57,7 +57,7 @@ class FreighterState extends BaseAuthorizedState<Freighter> {
             centerTitle: true,
             elevation: 2,
           ),
-          drawer: MainDrawer(currentUser),
+          drawer: PrimaryDrawer(currentUser),
           body: BlocBuilder(
               bloc: loadingBloc,
               builder: (context, LoadingState state) {

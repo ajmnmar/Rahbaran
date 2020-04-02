@@ -71,8 +71,7 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
           ),
           body: Container(
             alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: ListView(
               children: <Widget>[
                 LogoHeader(),
                 forgetPasswordSection()
@@ -86,105 +85,103 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
   }
 
   Widget forgetPasswordSection() {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        margin: EdgeInsets.symmetric(vertical: 20),
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
-              width: double.infinity,
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: double.infinity,
+            child: TextField(
+                key: otpTextFieldKey,
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption,
+                decoration: InputDecoration(
+                    hintText: 'کد پیامک شده',
+                    contentPadding: EdgeInsets.all(7),
+                    prefixIcon: Icon(
+                      Icons.input,
+                      color: StyleHelper.iconColor,
+                    ),
+                    )),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              alignment: Alignment.center,
               child: TextField(
-                  key: otpTextFieldKey,
-                  controller: otpController,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption,
-                  decoration: InputDecoration(
-                      hintText: 'کد پیامک شده',
-                      contentPadding: EdgeInsets.all(7),
-                      prefixIcon: Icon(
-                        Icons.input,
-                        color: StyleHelper.iconColor,
-                      ),
-                      )),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Container(
-                alignment: Alignment.center,
-                child: TextField(
-                  controller: passwordController,
-                  keyboardType: TextInputType.text,
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption,
-                  decoration: InputDecoration(
-                      hintText: 'کلمه عبور جدید',
-                      contentPadding: EdgeInsets.all(7),
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: StyleHelper.iconColor,
-                      ),
-                      ),
-                ),
+                controller: passwordController,
+                keyboardType: TextInputType.text,
+                obscureText: true,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption,
+                decoration: InputDecoration(
+                    hintText: 'کلمه عبور جدید',
+                    contentPadding: EdgeInsets.all(7),
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: StyleHelper.iconColor,
+                    ),
+                    ),
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Container(
-                alignment: Alignment.center,
-                child: TextField(
-                  controller: rePasswordController,
-                  keyboardType: TextInputType.text,
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption,
-                  decoration: InputDecoration(
-                      hintText: 'تکرار کلمه عبور جدید',
-                      contentPadding: EdgeInsets.all(7),
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: StyleHelper.iconColor,
-                      ),
-                      ),
-                ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              alignment: Alignment.center,
+              child: TextField(
+                controller: rePasswordController,
+                keyboardType: TextInputType.text,
+                obscureText: true,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption,
+                decoration: InputDecoration(
+                    hintText: 'تکرار کلمه عبور جدید',
+                    contentPadding: EdgeInsets.all(7),
+                    prefixIcon: Icon(
+                      Icons.lock,
+                      color: StyleHelper.iconColor,
+                    ),
+                    ),
               ),
             ),
-            SizedBox(
-              height: 15,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: otpTextFieldHeight,
+            child:BlocBuilder(
+                bloc:loadingBloc,
+                builder: (context,LoadingState state){
+                  return RaisedButton(
+                      onPressed: () {
+                        if (state.isLoading) return;
+                        changePasswordButtonClicked();
+                      },
+                      child: state.isLoading? CircularProgressIndicator(
+                          valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white)):
+                      Text('تایید و تغییر رمز عبور', style: Theme.of(context).textTheme.button));
+                }
             ),
-            SizedBox(
-              width: double.infinity,
-              height: otpTextFieldHeight,
-              child:BlocBuilder(
-                  bloc:loadingBloc,
-                  builder: (context,LoadingState state){
-                    return RaisedButton(
-                        onPressed: () {
-                          if (state.isLoading) return;
-                          changePasswordButtonClicked();
-                        },
-                        child: state.isLoading? CircularProgressIndicator(
-                            valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.white)):
-                        Text('تایید و تغییر رمز عبور', style: Theme.of(context).textTheme.button));
-                  }
-              ),
-            ),
-            BlocBuilder(
-                bloc: validationBloc,
-                builder: (context, ValidationState state) {
-                  return PrimaryValidation(state.validationVisibility,state.validationMessage);
-                }),
-          ],
-        ),
+          ),
+          BlocBuilder(
+              bloc: validationBloc,
+              builder: (context, ValidationState state) {
+                return PrimaryValidation(state.validationVisibility,state.validationMessage);
+              }),
+        ],
       ),
     );
   }

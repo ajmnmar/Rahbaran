@@ -79,8 +79,7 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
           ),
           body: Container(
             alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: ListView(
               children: <Widget>[LogoHeader(), registerSection()],
             ),
           ),
@@ -91,11 +90,10 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
   }
 
   Widget registerSection() {
-    return Expanded(
-        child: Container(
+    return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
       margin: EdgeInsets.symmetric(vertical: 20),
-      child: ListView(
+      child: Column(
         children: <Widget>[
           SizedBox(
             width: double.infinity,
@@ -253,11 +251,12 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
           BlocBuilder(
               bloc: validationBloc,
               builder: (context, ValidationState state) {
-                return PrimaryValidation(state.validationVisibility,state.validationMessage);
+                return PrimaryValidation(
+                    state.validationVisibility, state.validationMessage);
               }),
         ],
       ),
-    ));
+    );
   }
 
   void registerButtonClicked() async {

@@ -70,12 +70,8 @@ class RegisterStep1State extends BaseState<RegisterStep1> {
           ),
           body: Container(
             alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                LogoHeader(),
-                registerSection()
-              ],
+            child: ListView(
+              children: <Widget>[LogoHeader(), registerSection()],
             ),
           ),
         ),
@@ -85,11 +81,10 @@ class RegisterStep1State extends BaseState<RegisterStep1> {
   }
 
   Widget registerSection() {
-    return Expanded(
-        child: Container(
+    return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
       margin: EdgeInsets.symmetric(vertical: 20),
-      child: ListView(
+      child: Column(
         children: <Widget>[
           SizedBox(
             width: double.infinity,
@@ -106,14 +101,14 @@ class RegisterStep1State extends BaseState<RegisterStep1> {
                 style: Theme.of(context).textTheme.caption,
                 maxLength: otpLength,
                 decoration: InputDecoration(
-                    hintText: 'کد فعال سازی',
-                    contentPadding: EdgeInsets.all(7),
-                    counterText: "",
-                    prefixIcon: Icon(
-                      Icons.input,
-                      color: StyleHelper.iconColor,
-                    ),
-                    )),
+                  hintText: 'کد فعال سازی',
+                  contentPadding: EdgeInsets.all(7),
+                  counterText: "",
+                  prefixIcon: Icon(
+                    Icons.input,
+                    color: StyleHelper.iconColor,
+                  ),
+                )),
           ),
           SizedBox(
             height: 15,
@@ -122,35 +117,38 @@ class RegisterStep1State extends BaseState<RegisterStep1> {
             width: double.infinity,
             height: otpTextFieldHeight,
             child: BlocBuilder(
-                bloc:loadingBloc,
-                builder: (context,LoadingState state){
+                bloc: loadingBloc,
+                builder: (context, LoadingState state) {
                   return RaisedButton(
                       onPressed: () {
                         if (state.isLoading) return;
                         register();
                       },
-                      child: state.isLoading? CircularProgressIndicator(
-                          valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.white)):
-                      Text('تایید و ادامه', style: Theme.of(context).textTheme.button));
-                }
-            ),
+                      child: state.isLoading
+                          ? CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation<Color>(
+                                  Colors.white))
+                          : Text('تایید و ادامه',
+                              style: Theme.of(context).textTheme.button));
+                }),
           ),
           BlocBuilder(
               bloc: validationBloc,
               builder: (context, ValidationState state) {
-                return PrimaryValidation(state.validationVisibility,state.validationMessage);
+                return PrimaryValidation(
+                    state.validationVisibility, state.validationMessage);
               }),
         ],
       ),
-    ));
+    );
   }
 
   void register() async {
     try {
       validationBloc.add(HideValidationEvent());
       if (otpController.text.isEmpty) {
-        validationBloc.add(ShowValidationEvent('لطفا کد فعال سازی را وارد کنید'));
+        validationBloc
+            .add(ShowValidationEvent('لطفا کد فعال سازی را وارد کنید'));
         return;
       }
       loadingBloc.add(LoadingEvent.show);

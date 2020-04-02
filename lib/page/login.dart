@@ -62,9 +62,8 @@ class LoginState extends BaseState<Login> {
       children: <Widget>[
         Scaffold(
           body: Container(
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            alignment: Alignment.topCenter,
+            child: ListView(
               children: <Widget>[
                 LogoHeader(40),
                 loginSection(),
@@ -77,78 +76,76 @@ class LoginState extends BaseState<Login> {
   }
 
   Widget loginSection() {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              child: TextField(
-                  key: nationalTextFieldKey,
-                  controller: usernameController,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption,
-                  decoration: InputDecoration(
-                    hintText: 'شماره ملی',
-                    contentPadding: EdgeInsets.all(7),
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: StyleHelper.iconColor,
-                    ),
-                  )),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.text,
-                obscureText: true,
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: double.infinity,
+            child: TextField(
+                key: nationalTextFieldKey,
+                controller: usernameController,
+                keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.caption,
                 decoration: InputDecoration(
-                  hintText: 'کلمه عبور',
+                  hintText: 'شماره ملی',
                   contentPadding: EdgeInsets.all(7),
                   prefixIcon: Icon(
-                    Icons.vpn_key,
+                    Icons.person,
                     color: StyleHelper.iconColor,
                   ),
+                )),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: TextField(
+              controller: passwordController,
+              keyboardType: TextInputType.text,
+              obscureText: true,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.caption,
+              decoration: InputDecoration(
+                hintText: 'کلمه عبور',
+                contentPadding: EdgeInsets.all(7),
+                prefixIcon: Icon(
+                  Icons.vpn_key,
+                  color: StyleHelper.iconColor,
                 ),
               ),
             ),
-            SizedBox(
-              height: 15,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: nationalTextFieldHeight,
+            child: BlocBuilder(
+                bloc:loadingBloc,
+                builder: (context,LoadingState state){
+                  return RaisedButton(
+                      onPressed: () {
+                        if (state.isLoading) return;
+                        loginButtonClicked();
+                      },
+                      child: state.isLoading? CircularProgressIndicator(
+                          valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white)):
+                      Text('ورود', style: Theme.of(context).textTheme.button));
+                }
             ),
-            SizedBox(
-              width: double.infinity,
-              height: nationalTextFieldHeight,
-              child: BlocBuilder(
-                  bloc:loadingBloc,
-                  builder: (context,LoadingState state){
-                    return RaisedButton(
-                        onPressed: () {
-                          if (state.isLoading) return;
-                          loginButtonClicked();
-                        },
-                        child: state.isLoading? CircularProgressIndicator(
-                            valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.white)):
-                        Text('ورود', style: Theme.of(context).textTheme.button));
-                    }
-              ),
-            ),
-            BlocBuilder(
-                bloc: validationBloc,
-                builder: (context, ValidationState state) {
-                  return PrimaryValidation(state.validationVisibility,state.validationMessage);
-                }),
-            alternativeAction(),
-          ],
-        ),
+          ),
+          BlocBuilder(
+              bloc: validationBloc,
+              builder: (context, ValidationState state) {
+                return PrimaryValidation(state.validationVisibility,state.validationMessage);
+              }),
+          alternativeAction(),
+        ],
       ),
     );
   }

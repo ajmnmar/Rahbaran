@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rahbaran/Widget/grid_cell.dart';
 import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
-import 'package:rahbaran/Widget/main_drawer.dart';
+import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/Widget/plaque.dart';
 import 'package:rahbaran/common/plaque_id_direction.dart';
@@ -69,7 +69,7 @@ class FreighterDetailsState extends BaseAuthorizedState<FreighterDetails> {
                     })
               ],
             ),
-            drawer: MainDrawer(currentUser),
+            drawer: PrimaryDrawer(currentUser),
             bottomNavigationBar: MainBottomNavigationBar(bottomNavigationSelectedIndex),
             body: freighterBody(context)),
         Message(errorBloc),

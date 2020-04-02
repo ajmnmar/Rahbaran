@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
-import 'package:rahbaran/Widget/main_drawer.dart';
+import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/bloc/error_bloc.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
@@ -69,7 +69,7 @@ class NewsState extends BaseAuthorizedState<News> {
               centerTitle: true,
               elevation: 2,
             ),
-            drawer: MainDrawer(currentUser),
+            drawer: PrimaryDrawer(currentUser),
             body: BlocBuilder(
                 bloc: loadingBloc,
                 builder: (context, LoadingState state) {

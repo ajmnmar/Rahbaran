@@ -66,8 +66,7 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
           ),
           body: Container(
             alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+            child: ListView(
               children: <Widget>[
                 LogoHeader(),
                 forgetPasswordSection()
@@ -81,80 +80,78 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
   }
 
   Widget forgetPasswordSection() {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        margin: EdgeInsets.symmetric(vertical: 20),
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
-              width: double.infinity,
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      margin: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: double.infinity,
+            child: TextField(
+                key: nationalTextFieldKey,
+                controller: nationalCodeController,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption,
+                decoration: InputDecoration(
+                    hintText: 'شماره ملی',
+                    contentPadding: EdgeInsets.all(7),
+                    prefixIcon: Icon(
+                      Icons.person,
+                      color: StyleHelper.iconColor,
+                    ),
+                    )),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              alignment: Alignment.center,
               child: TextField(
-                  key: nationalTextFieldKey,
-                  controller: nationalCodeController,
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption,
-                  decoration: InputDecoration(
-                      hintText: 'شماره ملی',
-                      contentPadding: EdgeInsets.all(7),
-                      prefixIcon: Icon(
-                        Icons.person,
-                        color: StyleHelper.iconColor,
-                      ),
-                      )),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Container(
-                alignment: Alignment.center,
-                child: TextField(
-                  controller: mobileController,
-                  keyboardType: TextInputType.phone,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.caption,
-                  decoration: InputDecoration(
-                      hintText: 'شماره موبایل',
-                      contentPadding: EdgeInsets.all(7),
-                      prefixIcon: Icon(
-                        Icons.phone,
-                        color: StyleHelper.iconColor,
-                      ),
-                      ),
-                ),
+                controller: mobileController,
+                keyboardType: TextInputType.phone,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.caption,
+                decoration: InputDecoration(
+                    hintText: 'شماره موبایل',
+                    contentPadding: EdgeInsets.all(7),
+                    prefixIcon: Icon(
+                      Icons.phone,
+                      color: StyleHelper.iconColor,
+                    ),
+                    ),
               ),
             ),
-            SizedBox(
-              height: 15,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: nationalTextFieldHeight,
+            child:BlocBuilder(
+                bloc:loadingBloc,
+                builder: (context,LoadingState state){
+                  return RaisedButton(
+                      onPressed: () {
+                        if (state.isLoading) return;
+                        forgetButtonClicked();
+                      },
+                      child: state.isLoading? CircularProgressIndicator(
+                          valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.white)):
+                      Text('درخواست تغییر رمز', style: Theme.of(context).textTheme.button));
+                }
             ),
-            SizedBox(
-              width: double.infinity,
-              height: nationalTextFieldHeight,
-              child:BlocBuilder(
-                  bloc:loadingBloc,
-                  builder: (context,LoadingState state){
-                    return RaisedButton(
-                        onPressed: () {
-                          if (state.isLoading) return;
-                          forgetButtonClicked();
-                        },
-                        child: state.isLoading? CircularProgressIndicator(
-                            valueColor:
-                            new AlwaysStoppedAnimation<Color>(Colors.white)):
-                        Text('درخواست تغییر رمز', style: Theme.of(context).textTheme.button));
-                  }
-              ),
-            ),
-            BlocBuilder(
-                bloc: validationBloc,
-                builder: (context, ValidationState state) {
-                  return PrimaryValidation(state.validationVisibility,state.validationMessage);
-                }),
-          ],
-        ),
+          ),
+          BlocBuilder(
+              bloc: validationBloc,
+              builder: (context, ValidationState state) {
+                return PrimaryValidation(state.validationVisibility,state.validationMessage);
+              }),
+        ],
       ),
     );
   }

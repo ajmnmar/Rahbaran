@@ -11,6 +11,7 @@ class LogoHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: Alignment.topCenter,
       padding: EdgeInsets.only(
           left: 30,
           right: 30,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
-import 'package:rahbaran/Widget/main_drawer.dart';
+import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/data_model/news_model.dart';
 import 'base_authorized_state.dart';
@@ -53,7 +53,7 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
                     })
               ],
             ),
-            drawer: MainDrawer(currentUser),
+            drawer: PrimaryDrawer(currentUser),
             bottomNavigationBar:
                 MainBottomNavigationBar(bottomNavigationSelectedIndex),
             body: newsBody(context)),
