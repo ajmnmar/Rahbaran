@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rahbaran/page/freighter.dart';
 import 'package:rahbaran/page/news.dart';
+import 'package:rahbaran/page/shipping_document.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 
 class MainBottomNavigationBar extends StatelessWidget {
@@ -32,6 +33,10 @@ class MainBottomNavigationBar extends StatelessWidget {
           case 1:
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) => Freighter()));
+            break;
+          case 2:
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => ShippingDocument()));
             break;
         }
       },

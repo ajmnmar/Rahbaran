@@ -23,7 +23,7 @@ class Plaque extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(top: 5, right: 10),
+              padding: EdgeInsets.only(top: 5, right: 12),
               child: Text(
                 plaqueSerial,
                 style: Theme.of(context).textTheme.caption,

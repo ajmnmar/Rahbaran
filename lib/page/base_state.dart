@@ -46,9 +46,18 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   postApiData(String url, {Map<String, String> headers, String body}) async {
     http.Response response;
     try {
-      if (body.isEmpty)
+      if ((body==null || body.isEmpty)&&(headers==null)) {
         response =
-            await http.post(url).timeout(Duration(seconds: httpRequestTimeout));
+        await http.post(url).timeout(Duration(seconds: httpRequestTimeout));
+      }else if(body==null || body.isEmpty){
+        response = await http
+            .post(url, headers: headers)
+            .timeout(Duration(seconds: httpRequestTimeout));
+      }else if (headers==null){
+        response = await http
+            .post(url, body: body)
+            .timeout(Duration(seconds: httpRequestTimeout));
+      }
       else
         response = await http
             .post(url, headers: headers, body: body)
