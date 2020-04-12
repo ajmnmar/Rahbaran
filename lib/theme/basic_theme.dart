@@ -13,7 +13,7 @@ ThemeData basicTheme() {
         button: TextStyle(
             color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
         display1: TextStyle(color: accentColor, fontSize: 17), //validation
-        subhead: TextStyle(color: primaryColor, fontSize: 20),
+        subhead: TextStyle(color: primaryColor, fontSize: 20),//اطلاعات وجود ندارد
         body1: TextStyle(fontSize: 16),
         body2: TextStyle(fontSize: 18,fontWeight: FontWeight.w300),
         caption: TextStyle(fontSize: 17,color: Colors.black),

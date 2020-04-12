@@ -103,139 +103,52 @@ class FreighterState extends BaseAuthorizedState<Freighter> {
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (BuildContext context) => FreighterDetails(freighter)));
           },
-          child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                Plaque(freighter.plaqueSerial, freighter.plaqueId),
-                Divider(
-                  color: Colors.black12,
-                  height: 20,
-                  thickness: 1,
-                  endIndent: MediaQuery.of(context).size.width * .08,
-                  indent: MediaQuery.of(context).size.width * .08,
-                ),
-                Column(
-                  children: <Widget>[
-                    
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          PrimaryGridCell('شماره کارت هوشمند:'),
-                          PrimaryGridCell(freighter.cardNumber),
-                        ],
-                      ),
-                    ),
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          SecondaryGridCell('اعتبار معاینه فنی:'),
-                          SecondaryGridCell(freighter.technicalExaminationDate),
-                        ],
-                      ),
-                    ),
-                    IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          PrimaryGridCell('بارگیر:'),
-                          PrimaryGridCell(freighter.loaderType.toString()),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        ));
-  }
-
-  freighterCard1(FreighterModel freighter) {
-    return Card(
-        margin: EdgeInsets.all(10),
-        child: GestureDetector(
-          onTap: (){
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (BuildContext context) => FreighterDetails(freighter)));
-          },
-          child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                Plaque(freighter.plaqueSerial, freighter.plaqueId),
-                Divider(
-                  color: Colors.black12,
-                  height: 20,
-                  thickness: 1,
-                  endIndent: MediaQuery.of(context).size.width * .08,
-                  indent: MediaQuery.of(context).size.width * .08,
-                ),
-                Column(
-                  children: <Widget>[
-                    Row(
+          child: ClipPath(
+            clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(3))),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  border: Border(right: BorderSide(color: StyleHelper.mainColor, width: 5))),
+              child: Column(
+                children: <Widget>[
+                  Plaque(freighter.plaqueSerial, freighter.plaqueId),
+                  Divider(
+                    color: Colors.black12,
+                    height: 20,
+                    thickness: 1,
+                    endIndent: MediaQuery.of(context).size.width * .08,
+                    indent: MediaQuery.of(context).size.width * .08,
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        Expanded(
-                          child: Container(
-                              color: StyleHelper.mainColor,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 7, horizontal: 5),
-                              margin: EdgeInsets.all(2),
-                              child: Text('شماره کارت هوشمند:')),
-                        ),
-                        Expanded(
-                            child: Container(
-                                color: StyleHelper.mainColor,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 7, horizontal: 5),
-                                margin: EdgeInsets.all(2),
-                                child: Text(freighter.cardNumber)))
+                        TertiaryGridCell('شماره کارت هوشمند:'),
+                        TertiaryGridCell(freighter.cardNumber),
                       ],
                     ),
-                    Row(
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        Expanded(
-                          child: Container(
-                              color: Colors.black12,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 7, horizontal: 5),
-                              margin: EdgeInsets.all(2),
-                              child: Text('اعتبار معاینه فنی:')),
-                        ),
-                        Expanded(
-                            child: Container(
-                                color: Colors.black12,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 7, horizontal: 5),
-                                margin: EdgeInsets.all(2),
-                                child:
-                                    Text(freighter.technicalExaminationDate)))
+                        TertiaryGridCell('اعتبار معاینه فنی:'),
+                        TertiaryGridCell(freighter.technicalExaminationDate),
                       ],
                     ),
-                    Row(
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        Expanded(
-                          child: Container(
-                              color: StyleHelper.mainColor,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 7, horizontal: 5),
-                              margin: EdgeInsets.all(2),
-                              child: Text('بارگیر:')),
-                        ),
-                        Expanded(
-                            child: Container(
-                                color: StyleHelper.mainColor,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 7, horizontal: 5),
-                                margin: EdgeInsets.all(2),
-                                child: Text(freighter.loaderType.toString())))
+                        TertiaryGridCell('بارگیر:'),
+                        TertiaryGridCell(freighter.loaderType.toString()),
                       ],
-                    )
-                  ],
-                )
-              ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ));

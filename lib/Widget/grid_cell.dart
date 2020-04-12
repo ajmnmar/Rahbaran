@@ -4,7 +4,7 @@ import 'package:rahbaran/theme/style_helper.dart';
 class PrimaryGridCell extends StatelessWidget {
   final String text;
 
-  PrimaryGridCell(this.text);
+  PrimaryGridCell(value):text=value==null?'':value.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class PrimaryGridCell extends StatelessWidget {
 class SecondaryGridCell extends StatelessWidget {
   final String text;
 
-  SecondaryGridCell(this.text);
+  SecondaryGridCell(value):text=value==null?'':value.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class SecondaryGridCell extends StatelessWidget {
 class TertiaryGridCell extends StatelessWidget {
   final String text;
 
-  TertiaryGridCell(this.text);
+  TertiaryGridCell(value):text=value==null?'':value.toString();
 
   @override
   Widget build(BuildContext context) {

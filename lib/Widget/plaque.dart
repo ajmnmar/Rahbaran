@@ -5,7 +5,7 @@ class Plaque extends StatelessWidget {
   final String plaqueSerial;
   final String plaqueId;
 
-  Plaque(this.plaqueSerial,this.plaqueId);
+  Plaque(serial,id):plaqueSerial=serial==null?'--':serial.toString(),plaqueId=id==null?'':id.toString();
 
   @override
   Widget build(BuildContext context) {

@@ -78,46 +78,82 @@ class FreighterDetailsState extends BaseAuthorizedState<FreighterDetails> {
   }
 
   freighterBody(BuildContext context) {
-    return Card(
-        margin: EdgeInsets.all(10),
-        child:Container(
-            padding: EdgeInsets.all(10),
-      child:Column(
-      children:[
-        Plaque(freighter.plaqueSerial, freighter.plaqueId),
-        Divider(
-          color: Colors.black12,
-          height: 20,
-          thickness: 1,
-          endIndent: MediaQuery
-              .of(context)
-              .size
-              .width * .08,
-          indent: MediaQuery
-              .of(context)
-              .size
-              .width * .08,
-        ),
-      Expanded(
-        //margin: EdgeInsets.all(10),
-        child: Container(
-          child:ListView.builder(
-            itemCount: freighterFields.length,
-            itemBuilder: (BuildContext context,int index){
-              return IntrinsicHeight(
-                  child:Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  index%2==0?PrimaryGridCell(freighterFields[index][0]):SecondaryGridCell(freighterFields[index][0]),
-                  index%2==0?PrimaryGridCell(freighterFields[index][1]):SecondaryGridCell(freighterFields[index][1]),
-                ],
-              ));
-            },
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.all(10),
+            child: ListView(
+              children: <Widget>[
+                plaqueSection(),
+                freighterDetailsSection(),
+              ],
+            ),
           ),
-        )
-      )
-    ]
-      )
-    ));
+        ),
+      ],
+    );
+  }
+
+  plaqueSection() {
+    return Card(
+      child: Container(
+          padding: EdgeInsets.all(10),
+          alignment: Alignment.center,
+          child: Column(
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'پلاک ناوگان',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .title,
+                  )),
+              Plaque(freighter.plaqueSerial, freighter.plaqueId),
+            ],
+          )),
+    );
+  }
+
+  freighterDetailsSection() {
+    return Card(
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Container(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'جزئیات ناوگان',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .title,
+                )),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: freighterFields.length,
+              itemBuilder: (BuildContext context, int index) {
+                return IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        index % 2 == 0
+                            ? PrimaryGridCell(freighterFields[index][0])
+                            : SecondaryGridCell(freighterFields[index][0]),
+                        index % 2 == 0
+                            ? PrimaryGridCell(freighterFields[index][1])
+                            : SecondaryGridCell(freighterFields[index][1]),
+                      ],
+                    ));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

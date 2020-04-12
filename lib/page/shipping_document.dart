@@ -77,7 +77,7 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
       if (shippingDocumentList == null || shippingDocumentList.length == 0) {
         return Center(
           child: Text(
-            'ناوگانی برای شما یافت نشد!',
+            'سندحمل برای شما یافت نشد!',
             style: Theme.of(context).textTheme.subhead,
           ),
         );
