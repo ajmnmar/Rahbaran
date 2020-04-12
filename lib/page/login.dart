@@ -11,6 +11,7 @@ import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
+import 'package:rahbaran/page/login_help.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/pre_forget_password.dart';
@@ -30,7 +31,9 @@ class Login extends StatefulWidget {
 class LoginState extends BaseState<Login> {
   //style
   TextStyle loginFlatButtonTextStyle =
-  TextStyle(color: Colors.blue, fontSize: 17);
+  TextStyle(color: Colors.blue, fontSize: 16);
+  TextStyle loginFlatButtonSeparatorTextStyle =
+  TextStyle(color: Colors.black, fontSize: 16);
 
   //controllers
   TextEditingController usernameController = new TextEditingController();
@@ -156,19 +159,40 @@ class LoginState extends BaseState<Login> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
+            flex: 2,
             child: FlatButton(
+                padding: EdgeInsets.all(0),
                 onPressed: () {
-                  forgetPasswordClicked();
+                  loginHelpClicked();
                 },
                 child: Text(
-                  'فراموشی رمز عبور',
+                  'راهنما',
                   textAlign: TextAlign.center,
                   style: loginFlatButtonTextStyle,
                 )),
           ),
-          Text('/',textAlign: TextAlign.center,),
+          Text('/',textAlign: TextAlign.center,
+            style: loginFlatButtonSeparatorTextStyle,),
           Expanded(
+            flex: 4,
             child: FlatButton(
+                //materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                padding: EdgeInsets.all(0),
+                onPressed: () {
+                  forgetPasswordClicked();
+                },
+                child: Text(
+                  'فراموشی رمزعبور',
+                  textAlign: TextAlign.center,
+                  style: loginFlatButtonTextStyle,
+                )),
+          ),
+          Text('/',textAlign: TextAlign.center,
+            style: loginFlatButtonSeparatorTextStyle,),
+          Expanded(
+            flex: 5,
+            child: FlatButton(
+                padding: EdgeInsets.all(0),
                 onPressed: () {
                   registerClicked();
                 },
@@ -231,5 +255,10 @@ class LoginState extends BaseState<Login> {
   void registerClicked() {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (BuildContext context) => PreRegister()));
+  }
+
+  void loginHelpClicked() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => LoginHelp()));
   }
 }

@@ -86,7 +86,7 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
               style: Theme.of(context).textTheme.title,
             ),
           ),
-          new Expanded(
+          Expanded(
             child: Container(
               padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
               child: new SingleChildScrollView(
