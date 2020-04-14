@@ -11,7 +11,10 @@ import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
+import 'package:rahbaran/data_model/token_model.dart';
 import 'package:rahbaran/page/login_help.dart';
+import 'package:rahbaran/repository/database_helper.dart';
+import 'package:rahbaran/repository/token_repository.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/pre_forget_password.dart';
@@ -217,6 +220,12 @@ class LoginState extends BaseState<Login> {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           sharedPreferences.setString('token', jsonResponse['data']['token']);
+
+          //save token to db
+          var db=await DatabaseHelper().database;
+          await TokenRepository(db).deleteAll();
+          await TokenRepository(db).save(TokenModel(jsonResponse['data']['token'], ''));
+
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (BuildContext context) => News()),
                   (Route<dynamic> rout) => false);

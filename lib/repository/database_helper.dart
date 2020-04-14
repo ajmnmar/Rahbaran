@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
 
   static DatabaseHelper _databaseHelper; // Singleton DatabaseHelper
-  static Database _database; // Singleton Database
+  static var _database; // Singleton Database
 
   DatabaseHelper._createInstance(); // Named constructor to create instance of DatabaseHelper
 
@@ -23,6 +23,11 @@ class DatabaseHelper {
     return _database;
   }
 
+  getDB() async{
+    var a=await initializeDatabase();
+    return a;
+  }
+
   Future<Database> initializeDatabase() async {
     String path=join(await getDatabasesPath(), 'rahbaran.db');
 
@@ -32,6 +37,6 @@ class DatabaseHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        'CREATE TABLE Setting(token TEXT, refreshtoken TEXT)');
+        'CREATE TABLE Token(token TEXT, refreshtoken TEXT)');
   }
 }

@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:rahbaran/bloc/error_bloc.dart';
+import 'package:rahbaran/data_model/token_model.dart';
 import 'package:rahbaran/data_model/user_model.dart';
+import 'package:rahbaran/repository/database_helper.dart';
+import 'package:rahbaran/repository/token_repository.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
@@ -28,13 +31,29 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
   }
 
   getToken() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    token = sharedPreferences.getString('token');
-    if (token == null) {
-      //to do
+    try {
+      SharedPreferences sharedPreferences = await SharedPreferences
+          .getInstance();
+      token = sharedPreferences.getString('token');
+      if (token == null) {
+        //get token from db
+        var db=await DatabaseHelper().database;
+        var data=await TokenRepository(db).get();
+        if(data!=null && data.length>0){
+          sharedPreferences.setString('token', data.last.token);
+          token=data.last.token;
+        }
+
+        if (token == null) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => Login()),
+                  (Route<dynamic> rout) => false);
+        }
+      }
+    }on Exception catch (e) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => Login()),
-          (Route<dynamic> rout) => false);
+              (Route<dynamic> rout) => false);
     }
   }
 

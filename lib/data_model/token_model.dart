@@ -1,8 +1,8 @@
-class SettingModel{
+class TokenModel{
   String token;
   String refreshToken;
 
-  SettingModel(this.token,this.refreshToken);
+  TokenModel(this.token,this.refreshToken);
 
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -12,7 +12,7 @@ class SettingModel{
     return map;
   }
 
-  SettingModel.fromMapObject(Map<String, dynamic> map) {
+  TokenModel.fromMapObject(Map<String, dynamic> map) {
     this.token = map['token'];
     this.refreshToken = map['refreshtoken'];
   }
