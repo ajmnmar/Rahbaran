@@ -4,15 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatelessWidget{
   Home(){
-    checkToken();
+    //checkToken();
   }
   
   @override
   Widget build(BuildContext context) {
+    double t=MediaQuery.of(context).padding.top;
     // TODO: implement build
     return Scaffold(
       body: Center(
-        child: Text('data'),
+        child: Image.asset(
+          "assets/images/logo.png",
+        ),
       ),
     );
   }
