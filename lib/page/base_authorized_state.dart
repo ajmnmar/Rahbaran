@@ -35,34 +35,29 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
       SharedPreferences sharedPreferences = await SharedPreferences
           .getInstance();
       token = sharedPreferences.getString('token');
-      if (token == null) {
-        //get token from db
-        var db=await DatabaseHelper().database;
-        var data=await TokenRepository(db).get();
-        if(data!=null && data.length>0){
-          sharedPreferences.setString('token', data.last.token);
-          token=data.last.token;
-        }
-
-        if (token == null) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => Login()),
-                  (Route<dynamic> rout) => false);
-        }
-      }
     }on Exception catch (e) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => Login()),
-              (Route<dynamic> rout) => false);
+      //to do (log)
+    }finally{
+      if (token == null) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (BuildContext context) => Login()),
+                (Route<dynamic> rout) => false);
+      }
     }
   }
 
   void logout() {
     SharedPreferences.getInstance().then((SharedPreferences val) {
       val.clear();
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => Login()),
-          (Route<dynamic> rout) => false);
+
+      //save token to db
+      DatabaseHelper().database.then((db){
+        TokenRepository(db).deleteAll().then((val){
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => Login()),
+                  (Route<dynamic> rout) => false);
+        });
+      });
     });
   }
 

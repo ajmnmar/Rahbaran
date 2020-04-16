@@ -69,7 +69,7 @@ class NewsState extends BaseAuthorizedState<News> {
               centerTitle: true,
               elevation: 2,
             ),
-            drawer: PrimaryDrawer(currentUser),
+          drawer: PrimaryDrawer(currentUser: currentUser,logout: logout,),
             body: BlocBuilder(
                 bloc: loadingBloc,
                 builder: (context, LoadingState state) {

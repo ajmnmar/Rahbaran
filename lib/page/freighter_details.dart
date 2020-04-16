@@ -69,7 +69,7 @@ class FreighterDetailsState extends BaseAuthorizedState<FreighterDetails> {
                     })
               ],
             ),
-            drawer: PrimaryDrawer(currentUser),
+            drawer: PrimaryDrawer(currentUser: currentUser,logout: logout,),
             bottomNavigationBar: MainBottomNavigationBar(bottomNavigationSelectedIndex),
             body: freighterBody(context)),
         Message(errorBloc),

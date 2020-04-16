@@ -32,12 +32,6 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends BaseState<Login> {
-  //style
-  TextStyle loginFlatButtonTextStyle =
-  TextStyle(color: Colors.blue, fontSize: 16);
-  TextStyle loginFlatButtonSeparatorTextStyle =
-  TextStyle(color: Colors.black, fontSize: 16);
-
   //controllers
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
@@ -55,8 +49,10 @@ class LoginState extends BaseState<Login> {
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       setState(() {
-        nationalTextFieldHeight =
-            nationalTextFieldKey.currentContext.size.height;
+        //nationalTextFieldHeight =
+          //  nationalTextFieldKey.currentContext.size.height;
+        nationalTextFieldHeight=48;
+
       });
     });
   }
@@ -171,11 +167,11 @@ class LoginState extends BaseState<Login> {
                 child: Text(
                   'راهنما',
                   textAlign: TextAlign.center,
-                  style: loginFlatButtonTextStyle,
+                  style: StyleHelper.loginFlatButtonTextStyle,
                 )),
           ),
           Text('/',textAlign: TextAlign.center,
-            style: loginFlatButtonSeparatorTextStyle,),
+            style: StyleHelper.loginFlatButtonSeparatorTextStyle,),
           Expanded(
             flex: 4,
             child: FlatButton(
@@ -187,11 +183,11 @@ class LoginState extends BaseState<Login> {
                 child: Text(
                   'فراموشی رمزعبور',
                   textAlign: TextAlign.center,
-                  style: loginFlatButtonTextStyle,
+                  style: StyleHelper.loginFlatButtonTextStyle,
                 )),
           ),
           Text('/',textAlign: TextAlign.center,
-            style: loginFlatButtonSeparatorTextStyle,),
+            style: StyleHelper.loginFlatButtonSeparatorTextStyle,),
           Expanded(
             flex: 5,
             child: FlatButton(
@@ -201,7 +197,7 @@ class LoginState extends BaseState<Login> {
                 },
                 child: Text('ثبت نام در سامانه',
                     textAlign: TextAlign.center,
-                    style: loginFlatButtonTextStyle)
+                    style: StyleHelper.loginFlatButtonTextStyle)
             ),
           )
         ],

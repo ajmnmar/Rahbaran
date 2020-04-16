@@ -53,7 +53,7 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
                     })
               ],
             ),
-            drawer: PrimaryDrawer(currentUser),
+            drawer: PrimaryDrawer(currentUser: currentUser,logout: logout,),
             bottomNavigationBar:
                 MainBottomNavigationBar(bottomNavigationSelectedIndex),
             body: newsBody(context)),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rahbaran/data_model/token_model.dart';
 import 'package:rahbaran/page/forget_password.dart';
-import 'package:rahbaran/page/home.dart';
+import 'package:rahbaran/page/splash_screen.dart';
 import 'package:rahbaran/page/login.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rahbaran/page/news.dart';
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: basicTheme(),
-        home: Home(),
+        home: SplashScreen(),
         );
   }
 }
