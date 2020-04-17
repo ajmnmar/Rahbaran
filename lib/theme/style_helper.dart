@@ -13,6 +13,10 @@ class StyleHelper{
   TextStyle(color: Colors.black, fontSize: 16);
   ///////////////////////////////
 
+  //promary raisedbutton
+  static double raisedButtonHeight=48;
+  ////////////////////////////
+
   //primary container
   static EdgeInsetsGeometry primaryContainerMargin=EdgeInsets.all(10);
   static EdgeInsetsGeometry primaryContainerPadding=EdgeInsets.all(10);

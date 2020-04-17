@@ -28,7 +28,6 @@ class ProfileState extends BaseAuthorizedState<Profile> {
   LoadingBloc loadingBloc = new LoadingBloc();
   LoadingBloc buttonLoadingBloc = new LoadingBloc();
   ValidationBloc validationBloc = new ValidationBloc();
-  double fieldHeight=48;
 
   @override
   void initState() {
@@ -209,7 +208,7 @@ class ProfileState extends BaseAuthorizedState<Profile> {
               margin: EdgeInsets.only(top: 15),
               child: SizedBox(
                 width: double.infinity,
-                height: fieldHeight,
+                height: StyleHelper.raisedButtonHeight,
                 child: BlocBuilder(
                     bloc: buttonLoadingBloc,
                     builder: (context, LoadingState state) {

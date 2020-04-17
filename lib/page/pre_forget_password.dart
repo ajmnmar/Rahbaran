@@ -29,21 +29,6 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
   //variables
   ValidationBloc validationBloc = new ValidationBloc();
   LoadingBloc loadingBloc = new LoadingBloc();
-  GlobalKey nationalTextFieldKey = GlobalKey();
-  double nationalTextFieldHeight;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        nationalTextFieldHeight =
-            nationalTextFieldKey.currentContext.size.height;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +73,6 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
           SizedBox(
             width: double.infinity,
             child: TextField(
-                key: nationalTextFieldKey,
                 controller: nationalCodeController,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
@@ -130,7 +114,7 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
           ),
           SizedBox(
             width: double.infinity,
-            height: nationalTextFieldHeight,
+            height: StyleHelper.raisedButtonHeight,
             child:BlocBuilder(
                 bloc:loadingBloc,
                 builder: (context,LoadingState state){

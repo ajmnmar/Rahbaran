@@ -39,23 +39,6 @@ class LoginState extends BaseState<Login> {
   //variables
   ValidationBloc validationBloc = new ValidationBloc();
   LoadingBloc loadingBloc = new LoadingBloc();
-  GlobalKey nationalTextFieldKey = GlobalKey();
-  double nationalTextFieldHeight;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        //nationalTextFieldHeight =
-          //  nationalTextFieldKey.currentContext.size.height;
-        nationalTextFieldHeight=48;
-
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +68,6 @@ class LoginState extends BaseState<Login> {
           SizedBox(
             width: double.infinity,
             child: TextField(
-                key: nationalTextFieldKey,
                 controller: usernameController,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
@@ -125,7 +107,7 @@ class LoginState extends BaseState<Login> {
           ),
           SizedBox(
             width: double.infinity,
-            height: nationalTextFieldHeight,
+            height: StyleHelper.raisedButtonHeight,
             child: BlocBuilder(
                 bloc:loadingBloc,
                 builder: (context,LoadingState state){

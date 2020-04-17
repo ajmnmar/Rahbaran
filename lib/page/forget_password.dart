@@ -32,23 +32,9 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
   ValidationBloc validationBloc = new ValidationBloc();
   LoadingBloc loadingBloc = new LoadingBloc();
   String guid;
-  GlobalKey otpTextFieldKey = GlobalKey();
-  double otpTextFieldHeight;
 
 
   ForgetPasswordState(this.guid);
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        otpTextFieldHeight = otpTextFieldKey.currentContext.size.height;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +79,6 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
           SizedBox(
             width: double.infinity,
             child: TextField(
-                key: otpTextFieldKey,
                 controller: otpController,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
@@ -160,7 +145,7 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
           ),
           SizedBox(
             width: double.infinity,
-            height: otpTextFieldHeight,
+            height: StyleHelper.raisedButtonHeight,
             child:BlocBuilder(
                 bloc:loadingBloc,
                 builder: (context,LoadingState state){

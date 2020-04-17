@@ -42,22 +42,8 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
   String guid;
   String otp;
   UserModel userModel;
-  GlobalKey emailTextFieldKey = GlobalKey();
-  double emailTextFieldHeight;
 
   RegisterStep2State(this.guid, this.otp, this.userModel);
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        emailTextFieldHeight = emailTextFieldKey.currentContext.size.height;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +84,6 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
           SizedBox(
             width: double.infinity,
             child: TextField(
-                key: emailTextFieldKey,
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
@@ -231,7 +216,7 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
           ),
           SizedBox(
             width: double.infinity,
-            height: emailTextFieldHeight,
+            height: StyleHelper.raisedButtonHeight,
             child: BlocBuilder(
                 bloc: loadingBloc,
                 builder: (context, LoadingState state) {
