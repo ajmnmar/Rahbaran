@@ -18,17 +18,10 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
     extends BaseState<T> {
   String token;
   UserModel currentUser;
-  int bottomNavigationSelectedIndex = 0;
-  bool isActiveBottomNavigation=true;
+  int bottomNavigationSelectedIndex;
+  //bool isActiveBottomNavigation=true;
 
-  BaseAuthorizedState([bottomNavigationSelectedIndex]) {
-    if(bottomNavigationSelectedIndex == null){
-      this.bottomNavigationSelectedIndex=0;
-      isActiveBottomNavigation=false;
-    }else{
-      this.bottomNavigationSelectedIndex=bottomNavigationSelectedIndex;
-    }
-  }
+  BaseAuthorizedState([this.bottomNavigationSelectedIndex]) ;
 
   getToken() async {
     try {
@@ -82,5 +75,10 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
     }else {
       currentUser = UserModel.fromJson(convert.jsonDecode(currentUserJson));
     }
+  }
+
+  setCurrentUser(UserModel user) async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('currentUser', user.toJson());
   }
 }

@@ -23,7 +23,7 @@ class MainBottomNavigationBar extends StatelessWidget {
       selectedItemColor:
           isActiveBottomNavigation ? StyleHelper.iconColor : Colors.black,
       onTap: (index) {
-        if (bottomNavigationSelectedIndex == index) return;
+        if (isActiveBottomNavigation && bottomNavigationSelectedIndex == index) return;
         switch (index) {
           case 0:
             Navigator.of(context).pushAndRemoveUntil(

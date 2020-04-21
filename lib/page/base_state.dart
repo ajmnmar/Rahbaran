@@ -32,6 +32,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
         });
       } else if (response.statusCode != 200) {
         errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
+        return;
       }
     } on Exception catch (e) {
       if (e is SocketException || e is TimeoutException) {
@@ -39,6 +40,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       } else {
         errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
       }
+      return;
     }
     return response;
   }
@@ -64,6 +66,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
             .timeout(Duration(seconds: httpRequestTimeout));
       if (response.statusCode != 200) {
         errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
+        return;
       }
     } on Exception catch (e) {
       if (e is SocketException || e is TimeoutException) {
@@ -71,6 +74,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       } else {
         errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
       }
+      return;
     }
     return response;
   }

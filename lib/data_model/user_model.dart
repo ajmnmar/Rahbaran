@@ -15,7 +15,7 @@ class UserModel {
   UserMode userMode;
 
   UserModel(
-      this.id,
+      {this.id,
       this.firstName,
       this.lastName,
       this.fullName,
@@ -25,7 +25,7 @@ class UserModel {
       this.email,
       this.userImageAddress,
       this.userModeId,
-      this.userMode);
+      this.userMode});
 
   userModeName(){
     if(userMode == null)
@@ -41,17 +41,17 @@ class UserModel {
 
   factory UserModel.fromJson(dynamic json) {
     return UserModel(
-        json['id'].toString(),
-        json['firstname'],
-        json['lastname'],
-        json['fullName'],
-        json['companyName'],
-        json['nationalCode'],
-        json['mobile'],
-        json['email'],
-        json['userImageAddress'],
-        json['userModeId'],
-        UserMode.values[json['userModeId']]
+        id:json['id'].toString(),
+        firstName:json['firstname'],
+        lastName:json['lastname'],
+        fullName:json['fullName'],
+        companyName:json['companyName'],
+        nationalCode:json['nationalCode'],
+        mobile:json['mobile'],
+        email:json['email'],
+        userImageAddress:json['userImageAddress'],
+        userModeId:json['userModeId'],
+        userMode:UserMode.values[json['userModeId']]
     );
   }
 
@@ -69,4 +69,16 @@ class UserModel {
       'userModeId':userModeId
     });
   }
+
+  UserModel.clone(UserModel user):this(id: user.id,
+      firstName:user.firstName,
+      lastName:user.lastName,
+      fullName:user.fullName,
+      companyName:user.companyName,
+      nationalCode:user.nationalCode,
+      mobile:user.mobile,
+      email:user.email,
+      userImageAddress:user.userImageAddress,
+      userModeId:user.userModeId,
+      userMode: user.userMode);
 }

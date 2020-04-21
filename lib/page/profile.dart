@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +10,11 @@ import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
+import 'package:rahbaran/common/ShowDialog.dart';
+import 'package:rahbaran/data_model/user_model.dart';
 import 'package:rahbaran/page/base_authorized_state.dart';
 import 'package:rahbaran/theme/style_helper.dart';
+import 'dart:convert' as convert;
 
 class Profile extends StatefulWidget {
   @override
@@ -119,7 +123,8 @@ class ProfileState extends BaseAuthorizedState<Profile> {
             Container(
               margin: EdgeInsets.only(top: 10),
               alignment: Alignment.center,
-              child: (currentUser.fullName == null ||
+              child: (currentUser == null ||
+                      currentUser.fullName == null ||
                       currentUser.fullName.isEmpty)
                   ? Text('')
                   : Text(
@@ -191,6 +196,7 @@ class ProfileState extends BaseAuthorizedState<Profile> {
                 width: double.infinity,
                 child: TextField(
                   controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.caption,
                   decoration: InputDecoration(
@@ -254,7 +260,44 @@ class ProfileState extends BaseAuthorizedState<Profile> {
     );
   }
 
-  void saveButtonClicked() {}
+  void saveButtonClicked() async{
+    //validation
+    validationBloc.add(HideValidationEvent());
+    if(!EmailValidator.validate(emailController.text)){
+      validationBloc.add(ShowValidationEvent('فرمت ایمیل نادرست است'));
+      return;
+    }
+    ////////////
+
+    buttonLoadingBloc.add(LoadingEvent.show);
+
+    try {
+      UserModel tempUser=UserModel.clone(currentUser);
+      tempUser.email=emailController.text;
+
+      var url =
+          'https://apimy.rmto.ir/api/Hambar/saveuserinfo';
+      var response = await postApiData(url,
+          headers: {"Content-Type": "application/json",
+            'Authorization': 'Bearer $token',},
+          body: tempUser.toJson());
+      if (response != null) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        if (jsonResponse['message']['code'] == 0) {
+          setState(() {
+            //ShowDialog.showOkDialog(context, null, 'عملیات با موفقیت انجام شد');
+            setCurrentUser(tempUser);
+          });
+        } else if (jsonResponse['message']['code'] == 2) {
+          validationBloc.add(ShowValidationEvent('کاربری با این مشخصات یافت نشد'));
+        } else if (jsonResponse['message']['code'] == 7) {
+          validationBloc.add(ShowValidationEvent('خطا در ذخیره سازی'));
+        }
+      }
+    } finally {
+      buttonLoadingBloc.add(LoadingEvent.hide);
+    }
+  }
 
   void changePasswordClicked() {}
 }

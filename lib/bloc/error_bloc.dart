@@ -24,7 +24,7 @@ class ErrorState{
 
   void hideMessage(){
     this.messageOpacity = 0;
-    this.messageVisibility = true;
+    this.messageVisibility = false;
   }
 }
 
