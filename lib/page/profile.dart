@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
 import 'package:rahbaran/Widget/message.dart';
@@ -93,15 +95,20 @@ class ProfileState extends BaseAuthorizedState<Profile> {
               alignment: Alignment.topCenter,
               child: Stack(
                 children: <Widget>[
-                  Center(
-                    child: CircleAvatar(
-                      radius: min(MediaQuery.of(context).size.width / 6, 60),
-                      backgroundColor: Colors.white,
-                      backgroundImage: (currentUser == null ||
-                              currentUser.userImageAddress == null ||
-                              currentUser.userImageAddress.isEmpty)
-                          ? Image.asset('assets/images/driverempty.png').image
-                          : NetworkImage(currentUser.userImageAddress),
+                  GestureDetector(
+                    onTap: (){
+                      showUploadImageDialog(context,'انتخاب عکس','');
+                    },
+                    child: Center(
+                      child: CircleAvatar(
+                        radius: min(MediaQuery.of(context).size.width / 6, 60),
+                        backgroundColor: Colors.white,
+                        backgroundImage: (currentUser == null ||
+                                currentUser.userImageAddress == null ||
+                                currentUser.userImageAddress.isEmpty)
+                            ? Image.asset('assets/images/driverempty.png').image
+                            : NetworkImage(currentUser.userImageAddress),
+                      ),
                     ),
                   ),
                   Center(
@@ -300,4 +307,34 @@ class ProfileState extends BaseAuthorizedState<Profile> {
   }
 
   void changePasswordClicked() {}
+
+  showUploadImageDialog(context,String title,String content) async{
+    return await showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            content: new SingleChildScrollView(
+              child: new ListBody(
+                children: <Widget>[
+                  Container(child:Text('d')),
+                  GestureDetector(
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.camera),
+                          SizedBox(width: 5),
+                          Text('Take a picture                       '),
+                        ],
+                      ),
+                      onTap: () async {
+                      }),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
 }
