@@ -8,9 +8,9 @@ class StyleHelper{
 
   //primary flatbutton
   static TextStyle loginFlatButtonTextStyle =
-  TextStyle(color: Colors.blue, fontSize: 16);
+  TextStyle(color: Colors.blue, fontSize: 15);
   static TextStyle loginFlatButtonSeparatorTextStyle =
-  TextStyle(color: Colors.black, fontSize: 16);
+  TextStyle(color: Colors.black, fontSize: 15);
   ///////////////////////////////
 
   //promary raisedbutton

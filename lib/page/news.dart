@@ -118,9 +118,15 @@ class NewsState extends BaseAuthorizedState<News> {
                 Row(
                   children: <Widget>[
                     Container(
-                      height: 60,
+                      height: 65,
+                      width: 65,
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey,width: 1),
+                        borderRadius: BorderRadius.circular(5)
+                      ),
                       child: Image.network(news.messageImageAddress,
-                          fit: BoxFit.fill),
+                          fit: BoxFit.contain),
                     ),
                     Container(
                       padding: EdgeInsets.only(right: 10),
@@ -132,7 +138,8 @@ class NewsState extends BaseAuthorizedState<News> {
                             height: 15,
                           ),
                           Text(
-                              'تاریخ انتشار: ${news.publishDate.day.toString().padLeft(2, '0')}-${news.publishDate.month.toString().padLeft(2, '0')}-${news.publishDate.year.toString()}',
+                              //'تاریخ انتشار: ${news.publishDate.day.toString().padLeft(2, '0')}-${news.publishDate.month.toString().padLeft(2, '0')}-${news.publishDate.year.toString()}',
+                              'تاریخ انتشار: ${news.shamsiPublishDate}',
                               style: newsDateTextStyle)
                         ],
                       ),

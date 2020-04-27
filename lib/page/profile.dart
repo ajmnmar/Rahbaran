@@ -285,7 +285,7 @@ class ProfileState extends BaseAuthorizedState<Profile> {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            //ShowDialog.showOkDialog(context, null, 'عملیات با موفقیت انجام شد');
+            ShowDialog.showOkDialog(context, null, 'عملیات با موفقیت انجام شد');
             setCurrentUser(tempUser);
           });
         } else if (jsonResponse['message']['code'] == 2) {

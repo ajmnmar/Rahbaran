@@ -52,6 +52,7 @@ class LoginState extends BaseState<Login> {
               children: <Widget>[
                 LogoHeader(40),
                 loginSection(),
+                alternativeSection()
               ],
             ),
           ),
@@ -128,26 +129,26 @@ class LoginState extends BaseState<Login> {
               builder: (context, ValidationState state) {
                 return PrimaryValidation(state.validationVisibility,state.validationMessage);
               }),
-          alternativeAction(),
         ],
       ),
     );
   }
 
-  Widget alternativeAction() {
+  Widget alternativeSection() {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            flex: 2,
+            flex: 4,
             child: FlatButton(
                 padding: EdgeInsets.all(0),
                 onPressed: () {
                   loginHelpClicked();
                 },
                 child: Text(
-                  'راهنما',
+                  'قوانین ومقررات',
                   textAlign: TextAlign.center,
                   style: StyleHelper.loginFlatButtonTextStyle,
                 )),
