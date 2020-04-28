@@ -310,28 +310,35 @@ class ProfileState extends BaseAuthorizedState<Profile> {
 
   showUploadImageDialog(context,String title,String content) async{
     return await showDialog(context: context,
-        barrierDismissible: false,
+        barrierDismissible: true,
         builder: (BuildContext context){
           return AlertDialog(
             content: new SingleChildScrollView(
-              child: new ListBody(
-                children: <Widget>[
-                  Container(child:Text('d')),
-                  GestureDetector(
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.camera),
-                          SizedBox(width: 5),
-                          Text('Take a picture                       '),
-                        ],
-                      ),
-                      onTap: () async {
-                      }),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
+              child:Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            SizedBox(
+                                width:58,
+                                height: 58,
+                                child: Image.asset('assets/images/camera.png')),
+                            Text('دوربین',style: Theme.of(context).textTheme.body1,),
+                          ],
+                        ),
+                        Column(
+                          children: <Widget>[
+                            SizedBox(
+                                width:58,
+                                height: 58,
+                                child: Image.asset('assets/images/gallery.png')),
+                            Text('گالری',style:Theme.of(context).textTheme.body1),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
             ),
           );
         }
