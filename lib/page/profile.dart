@@ -16,6 +16,7 @@ import 'package:rahbaran/common/ShowDialog.dart';
 import 'package:rahbaran/data_model/user_model.dart';
 import 'package:rahbaran/page/base_authorized_state.dart';
 import 'package:rahbaran/theme/style_helper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:convert' as convert;
 
 class Profile extends StatefulWidget {
@@ -318,23 +319,30 @@ class ProfileState extends BaseAuthorizedState<Profile> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            SizedBox(
-                                width:58,
-                                height: 58,
-                                child: Image.asset('assets/images/camera.png')),
-                            Text('دوربین',style: Theme.of(context).textTheme.body1,),
-                          ],
+                        GestureDetector(
+                          onTap: (){
+                            getImage();
+                          },
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(
+                                  width:58,
+                                  height: 58,
+                                  child: Image.asset('assets/images/camera.png')),
+                              Text('دوربین',style: Theme.of(context).textTheme.body1,),
+                            ],
+                          ),
                         ),
-                        Column(
-                          children: <Widget>[
-                            SizedBox(
-                                width:58,
-                                height: 58,
-                                child: Image.asset('assets/images/gallery.png')),
-                            Text('گالری',style:Theme.of(context).textTheme.body1),
-                          ],
+                        GestureDetector(
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(
+                                  width:58,
+                                  height: 58,
+                                  child: Image.asset('assets/images/gallery.png')),
+                              Text('گالری',style:Theme.of(context).textTheme.body1),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -343,5 +351,29 @@ class ProfileState extends BaseAuthorizedState<Profile> {
           );
         }
     );
+  }
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    List<int> imageBytes = image.readAsBytesSync();
+    String base64Image = convert.base64Encode(imageBytes);
+    var t=convert.json.encode(base64Image);
+
+    var url =
+        'https://apimy.rmto.ir/api/Hambar/saveuserimagebase64';
+    var response = await postApiData(url,
+        headers: {"Content-Type": "application/json",
+          'Authorization': 'Bearer $token',},
+        body: t);
+    if (response != null) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      currentUser.userImageAddress=jsonResponse;
+    }
+
+
+    setState(() {
+      //_image = image;
+    });
   }
 }

@@ -28,6 +28,7 @@ dependencies:
   path: ^1.6.4
   email_validator: ^1.0.4
   shamsi_date: ^0.8.1
+  image_picker: ^0.6.5+2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

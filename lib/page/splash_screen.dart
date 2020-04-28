@@ -32,6 +32,7 @@ class SplashScreenState extends State<SplashScreen> {
 
   void checkToken() async {
     try {
+
       //get token from db
       var db=await DatabaseHelper().database;
       var tokenModelList=await TokenRepository(db).get();
