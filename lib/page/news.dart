@@ -65,7 +65,7 @@ class NewsState extends BaseAuthorizedState<News> {
       children: <Widget>[
         Scaffold(
             appBar: AppBar(
-              title: Text('اخبار'),
+              title: Text('اخبار',style: Theme.of(context).textTheme.title),
               centerTitle: true,
               elevation: 2,
             ),

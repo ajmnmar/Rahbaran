@@ -50,7 +50,7 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text('لیست اسناد حمل'),
+            title: Text('لیست اسناد حمل',style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
           ),

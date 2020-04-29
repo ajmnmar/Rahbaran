@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rahbaran/Widget/logo_header.dart';
 
-class LoginHelp extends StatelessWidget {
+class LoginRule extends StatelessWidget {
   final helpContext='اپلیکیشن راهبران حمل و نقل خدمتی است از سازمان راهداری و حمل و نقل جاده ای به رانندگان و صاحبان ناوگان کشور.'+
   ' رانندگان و صاحبان ناوگان می توانند با استفاده از این اپلیکیشن به خدمات متنوع سازمان راهداری و حمل و نقل جاده ای دسترسی داشته باشند.'+
   '\n'+
@@ -13,7 +13,7 @@ class LoginHelp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('راهنما', style: Theme.of(context).textTheme.title),
+        title: Text('قوانین و مقررات', style: Theme.of(context).textTheme.title),
         centerTitle: true,
         elevation: 2,
         automaticallyImplyLeading: false,

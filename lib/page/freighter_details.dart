@@ -58,7 +58,7 @@ class FreighterDetailsState extends BaseAuthorizedState<FreighterDetails> {
       children: <Widget>[
         Scaffold(
             appBar: AppBar(
-              title: Text('جزئیات ناوگان'),
+              title: Text('جزئیات ناوگان',style: Theme.of(context).textTheme.title),
               centerTitle: true,
               elevation: 2,
               actions: <Widget>[

@@ -5,7 +5,7 @@ class ShippingDocumentModel {
   String docTypeStr;
   String docTypeString;
   String plaqueNumber;
-  int plaqueSerial;
+  String plaqueSerial;
   String issueDate;
   String calcIssueDate;
   String source;

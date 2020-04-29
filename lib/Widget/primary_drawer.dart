@@ -2,8 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:rahbaran/data_model/user_model.dart';
+import 'package:rahbaran/page/about_us.dart';
+import 'package:rahbaran/page/freighter.dart';
 import 'package:rahbaran/page/login.dart';
+import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/profile.dart';
+import 'package:rahbaran/page/shipping_document.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,6 +68,11 @@ class PrimaryDrawer extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 ListTile(
+                  onTap: (){
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (BuildContext context) => News()),
+                            (Route<dynamic> rout) => false);
+                  },
                   title: Text(
                     'اخبار',
                     style: Theme.of(context).textTheme.body2,
@@ -74,6 +83,10 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                 ),
                 ListTile(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => Freighter()));
+                  },
                   title: Text(
                     'لیست ناوگان',
                     style: Theme.of(context).textTheme.body2,
@@ -84,6 +97,10 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                 ),
                 ListTile(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => ShippingDocument()));
+                  },
                   title: Text(
                     'لیست اسناد حمل',
                     style: Theme.of(context).textTheme.body2,
@@ -94,6 +111,10 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                 ),
                 ListTile(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => AboutUs()));
+                  },
                   title: Text(
                     'درباره ما',
                     style: Theme.of(context).textTheme.body2,

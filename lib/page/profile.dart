@@ -62,7 +62,7 @@ class ProfileState extends BaseAuthorizedState<Profile> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text('اطلاعات کاربری'),
+            title: Text('اطلاعات کاربری',style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
           ),
@@ -312,14 +312,22 @@ class ProfileState extends BaseAuthorizedState<Profile> {
   onCameraTap() {
     getImage(ImageSource.camera).then((base64Image){
       Navigator.of(context).pop();
-      saveImage(base64Image);
+      saveImage(base64Image).then((val){
+        setState(() {
+
+        });
+      });
     });
   }
 
   onGalleryTap() {
     getImage(ImageSource.gallery).then((base64Image){
       Navigator.of(context).pop();
-      saveImage(base64Image);
+      saveImage(base64Image).then((val){
+        setState(() {
+
+        });
+      });
     });
   }
 

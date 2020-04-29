@@ -53,7 +53,7 @@ class FreighterState extends BaseAuthorizedState<Freighter> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text('لیست ناوگان'),
+            title: Text('لیست ناوگان',style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
           ),

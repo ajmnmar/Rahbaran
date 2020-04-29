@@ -12,7 +12,7 @@ import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
 import 'package:rahbaran/data_model/token_model.dart';
-import 'package:rahbaran/page/login_help.dart';
+import 'package:rahbaran/page/login_rule.dart';
 import 'package:rahbaran/repository/database_helper.dart';
 import 'package:rahbaran/repository/token_repository.dart';
 import 'package:rahbaran/theme/style_helper.dart';
@@ -247,6 +247,6 @@ class LoginState extends BaseState<Login> {
 
   void loginHelpClicked() {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => LoginHelp()));
+        builder: (BuildContext context) => LoginRule()));
   }
 }

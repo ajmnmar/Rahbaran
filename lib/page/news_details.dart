@@ -42,7 +42,7 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
       children: <Widget>[
         Scaffold(
             appBar: AppBar(
-              title: Text('جزئیات خبر'),
+              title: Text('جزئیات خبر',style: Theme.of(context).textTheme.title),
               centerTitle: true,
               elevation: 2,
               actions: <Widget>[
