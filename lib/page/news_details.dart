@@ -30,7 +30,7 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
     super.initState();
 
     getToken().then((val) {
-      getCurrentUser().then((val) {
+      initCurrentUser().then((val) {
         setState(() {});
       });
     });

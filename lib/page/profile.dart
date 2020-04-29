@@ -12,7 +12,7 @@ import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
-import 'package:rahbaran/common/ShowDialog.dart';
+import 'package:rahbaran/common/show_dialog.dart';
 import 'package:rahbaran/data_model/user_model.dart';
 import 'package:rahbaran/page/base_authorized_state.dart';
 import 'package:rahbaran/theme/style_helper.dart';
@@ -43,7 +43,7 @@ class ProfileState extends BaseAuthorizedState<Profile> {
 
     loadingBloc.add(LoadingEvent.show);
     getToken().then((val) {
-      getCurrentUser().then((val) {
+      initCurrentUser().then((val) {
         setState(() {
           nationalCodeController.text = currentUser.nationalCode;
           emailController.text = currentUser.email;
@@ -98,7 +98,7 @@ class ProfileState extends BaseAuthorizedState<Profile> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: (){
-                      showUploadImageDialog(context,'انتخاب عکس','');
+                      ShowDialog.showUploadImageDialog(context,onCameraTap,onGalleryTap);
                     },
                     child: Center(
                       child: CircleAvatar(
@@ -292,9 +292,9 @@ class ProfileState extends BaseAuthorizedState<Profile> {
       if (response != null) {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
+          ShowDialog.showAlertDialog(context, null, 'عملیات با موفقیت انجام شد');
+          await setCurrentUser(tempUser);
           setState(() {
-            ShowDialog.showOkDialog(context, null, 'عملیات با موفقیت انجام شد');
-            setCurrentUser(tempUser);
           });
         } else if (jsonResponse['message']['code'] == 2) {
           validationBloc.add(ShowValidationEvent('کاربری با این مشخصات یافت نشد'));
@@ -309,71 +309,40 @@ class ProfileState extends BaseAuthorizedState<Profile> {
 
   void changePasswordClicked() {}
 
-  showUploadImageDialog(context,String title,String content) async{
-    return await showDialog(context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context){
-          return AlertDialog(
-            content: new SingleChildScrollView(
-              child:Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: (){
-                            getImage();
-                          },
-                          child: Column(
-                            children: <Widget>[
-                              SizedBox(
-                                  width:58,
-                                  height: 58,
-                                  child: Image.asset('assets/images/camera.png')),
-                              Text('دوربین',style: Theme.of(context).textTheme.body1,),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          child: Column(
-                            children: <Widget>[
-                              SizedBox(
-                                  width:58,
-                                  height: 58,
-                                  child: Image.asset('assets/images/gallery.png')),
-                              Text('گالری',style:Theme.of(context).textTheme.body1),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-            ),
-          );
-        }
-    );
+  onCameraTap() {
+    getImage(ImageSource.camera).then((base64Image){
+      Navigator.of(context).pop();
+      saveImage(base64Image);
+    });
   }
 
-  Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+  onGalleryTap() {
+    getImage(ImageSource.gallery).then((base64Image){
+      Navigator.of(context).pop();
+      saveImage(base64Image);
+    });
+  }
+
+  Future<String> getImage(ImageSource imageSource) async {
+    var image = await ImagePicker.pickImage(source: imageSource);
 
     List<int> imageBytes = image.readAsBytesSync();
     String base64Image = convert.base64Encode(imageBytes);
-    var t=convert.json.encode(base64Image);
+    return base64Image;
+  }
 
+  saveImage(String base64Image) async{
     var url =
         'https://apimy.rmto.ir/api/Hambar/saveuserimagebase64';
     var response = await postApiData(url,
         headers: {"Content-Type": "application/json",
           'Authorization': 'Bearer $token',},
-        body: t);
+        body: convert.json.encode(base64Image));
     if (response != null) {
       var jsonResponse = convert.jsonDecode(response.body);
-      currentUser.userImageAddress=jsonResponse;
+      UserModel tempUser=UserModel.clone(currentUser);
+      tempUser.userImageAddress=jsonResponse['url'];
+      await setCurrentUser(tempUser);
     }
-
-
-    setState(() {
-      //_image = image;
-    });
   }
 }

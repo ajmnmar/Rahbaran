@@ -38,7 +38,7 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
           loadingBloc.add(LoadingEvent.hide);
         });
       });
-      getCurrentUser().then((val) {
+      initCurrentUser().then((val) {
         setState(() {});
       });
     });

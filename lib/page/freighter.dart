@@ -36,12 +36,12 @@ class FreighterState extends BaseAuthorizedState<Freighter> {
     loadingBloc.add(LoadingEvent.show);
     getToken().then((val) {
       getFreighter().then((list) {
+        loadingBloc.add(LoadingEvent.hide);
         setState(() {
           freighterList = list;
-          loadingBloc.add(LoadingEvent.hide);
         });
       });
-      getCurrentUser().then((val) {
+      initCurrentUser().then((val) {
         setState(() {});
       });
     });

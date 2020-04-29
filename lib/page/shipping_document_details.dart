@@ -50,7 +50,7 @@ class ShippingDocumentDetailsState
     super.initState();
 
     getToken().then((val) {
-      getCurrentUser().then((val) {
+      initCurrentUser().then((val) {
         setState(() {});
       });
     });

@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
-  final int httpRequestTimeout = 10;
+  final int httpRequestTimeout = 30;
 
   ErrorBloc errorBloc = new ErrorBloc();
 
@@ -21,8 +21,8 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
     http.Response response;
     try {
       response = await http
-          .get(url, headers: headers)
-          .timeout(Duration(seconds: httpRequestTimeout));
+          .get(url, headers: headers);
+          //.timeout(Duration(seconds: httpRequestTimeout));
       if (response.statusCode == 401) {
         SharedPreferences.getInstance().then((SharedPreferences val) {
           val.clear();
@@ -50,21 +50,30 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
     try {
       if ((body==null || body.isEmpty)&&(headers==null)) {
         response =
-        await http.post(url).timeout(Duration(seconds: httpRequestTimeout));
+        await http.post(url);//.timeout(Duration(seconds: httpRequestTimeout));
       }else if(body==null || body.isEmpty){
         response = await http
-            .post(url, headers: headers)
-            .timeout(Duration(seconds: httpRequestTimeout));
+            .post(url, headers: headers);
+            //.timeout(Duration(seconds: httpRequestTimeout));
       }else if (headers==null){
         response = await http
-            .post(url, body: body)
-            .timeout(Duration(seconds: httpRequestTimeout));
+            .post(url, body: body);
+            //.timeout(Duration(seconds: httpRequestTimeout));
       }
-      else
+      else {
         response = await http
-            .post(url, headers: headers, body: body)
-            .timeout(Duration(seconds: httpRequestTimeout));
-      if (response.statusCode != 200) {
+            .post(url, headers: headers, body: body);
+            //.timeout(Duration(seconds: httpRequestTimeout));
+      }
+      if (response.statusCode == 401) {
+        SharedPreferences.getInstance().then((SharedPreferences val) {
+          val.clear();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => Login()),
+                  (Route<dynamic> rout) => false);
+        });
+      }
+      else if (response.statusCode != 200) {
         errorBloc.add(ShowErrorEvent('خطا در اتصال به سرور!'));
         return;
       }

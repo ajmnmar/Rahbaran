@@ -54,7 +54,7 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
     });
   }
 
-  getCurrentUser() async {
+  initCurrentUser() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var currentUserJson=sharedPreferences.getString('currentUser');
     if(currentUserJson==null) {
@@ -80,5 +80,6 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
   setCurrentUser(UserModel user) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('currentUser', user.toJson());
+    currentUser=user;
   }
 }

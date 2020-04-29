@@ -48,12 +48,12 @@ class NewsState extends BaseAuthorizedState<News> {
     loadingBloc.add(LoadingEvent.show);
     getToken().then((val) {
       getNews().then((list) {
+        loadingBloc.add(LoadingEvent.hide);
         setState(() {
           newsList = list;
-          loadingBloc.add(LoadingEvent.hide);
         });
       });
-      getCurrentUser().then((val) {
+      initCurrentUser().then((val) {
         setState(() {});
       });
     });

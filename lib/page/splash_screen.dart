@@ -32,13 +32,14 @@ class SplashScreenState extends State<SplashScreen> {
 
   void checkToken() async {
     try {
+      SharedPreferences sharedPreferences = await SharedPreferences
+          .getInstance();
+      await sharedPreferences.clear();
 
       //get token from db
       var db=await DatabaseHelper().database;
       var tokenModelList=await TokenRepository(db).get();
       if(tokenModelList!=null && tokenModelList.length>0) {
-        SharedPreferences sharedPreferences = await SharedPreferences
-            .getInstance();
         sharedPreferences.setString('token', tokenModelList.last.token);
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => News()),

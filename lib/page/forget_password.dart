@@ -7,7 +7,7 @@ import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
-import 'package:rahbaran/common/ShowDialog.dart';
+import 'package:rahbaran/common/show_dialog.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'dart:convert' as convert;
 
@@ -200,7 +200,7 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            ShowDialog.showOkDialog(context, null, 'عملیات با موفقیت انجام شد')
+            ShowDialog.showAlertDialog(context, null, 'عملیات با موفقیت انجام شد')
                 .then((val) {
               Navigator.of(context).pop();
             });

@@ -46,7 +46,7 @@ class FreighterDetailsState extends BaseAuthorizedState<FreighterDetails> {
     super.initState();
 
     getToken().then((val) {
-      getCurrentUser().then((val) {
+      initCurrentUser().then((val) {
         setState(() {});
       });
     });
