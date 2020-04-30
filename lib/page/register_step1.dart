@@ -7,6 +7,8 @@ import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/data_model/user_model.dart';
+import 'package:rahbaran/page/argument/register_step1_argument.dart';
+import 'package:rahbaran/page/argument/register_step2_argument.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/page/register_step2.dart';
 import 'dart:convert' as convert;
@@ -14,12 +16,12 @@ import 'dart:convert' as convert;
 import 'base_state.dart';
 
 class RegisterStep1 extends StatefulWidget {
-  final String guid;
+  static const routeName = '/RegisterStep1';
 
-  RegisterStep1(this.guid);
+  RegisterStep1();
 
   @override
-  RegisterStep1State createState() => RegisterStep1State(guid);
+  RegisterStep1State createState() => RegisterStep1State();
 }
 
 class RegisterStep1State extends BaseState<RegisterStep1> {
@@ -32,12 +34,12 @@ class RegisterStep1State extends BaseState<RegisterStep1> {
   //variables
   ValidationBloc validationBloc = new ValidationBloc();
   LoadingBloc loadingBloc = new LoadingBloc();
-  String guid;
-
-  RegisterStep1State(this.guid);
+  RegisterStep1Argument registerStep1Argument;
 
   @override
   Widget build(BuildContext context) {
+    registerStep1Argument = ModalRoute.of(context).settings.arguments;
+
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -139,17 +141,18 @@ class RegisterStep1State extends BaseState<RegisterStep1> {
       loadingBloc.add(LoadingEvent.show);
 
       var url =
-          'https://apimy.rmto.ir/api/Hambar/RegistrationStep1?token=$guid&otp=${otpController.text}';
+          'https://apimy.rmto.ir/api/Hambar/RegistrationStep1?token=${registerStep1Argument.guid}&otp=${otpController.text}';
       var response = await getApiData(url);
       if (response != null) {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) => RegisterStep2(
-                    guid,
-                    otpController.text,
-                    UserModel.fromJson(jsonResponse['data']))));
+            Navigator.of(context).pushReplacementNamed(RegisterStep2.routeName,
+              arguments: RegisterStep2Argument(
+                  registerStep1Argument.guid,
+                  otpController.text,
+                  UserModel.fromJson(jsonResponse['data'])
+              ),);
           });
         } else if (jsonResponse['message']['code'] == 5) {
           validationBloc.add(ShowValidationEvent('کد فعال سازی اشتباه است'));

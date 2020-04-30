@@ -8,18 +8,17 @@ import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/show_dialog.dart';
+import 'package:rahbaran/page/argument/forget_password_argument.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'dart:convert' as convert;
 
 import 'base_state.dart';
 
 class ForgetPassword extends StatefulWidget {
-  final String guid;
-
-  ForgetPassword(this.guid);
+  static const routeName = '/ForgetPassword';
 
   @override
-  ForgetPasswordState createState() => ForgetPasswordState(guid);
+  ForgetPasswordState createState() => ForgetPasswordState();
 }
 
 class ForgetPasswordState extends BaseState<ForgetPassword> {
@@ -31,13 +30,12 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
   //variables
   ValidationBloc validationBloc = new ValidationBloc();
   LoadingBloc loadingBloc = new LoadingBloc();
-  String guid;
-
-
-  ForgetPasswordState(this.guid);
+  ForgetPasswordArgument forgetPasswordArgument;
 
   @override
   Widget build(BuildContext context) {
+    this.forgetPasswordArgument = ModalRoute.of(context).settings.arguments;
+
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -194,7 +192,7 @@ class ForgetPasswordState extends BaseState<ForgetPassword> {
       loadingBloc.add(LoadingEvent.show);
 
       var url =
-          'https://apimy.rmto.ir/api/Hambar/ForgetPassword?password=${passwordController.text}&token=$guid&otp=${otpController.text}';
+          'https://apimy.rmto.ir/api/Hambar/ForgetPassword?password=${passwordController.text}&token=${forgetPasswordArgument.guid}&otp=${otpController.text}';
       var response = await postApiData(url);
       if (response != null) {
         var jsonResponse = convert.jsonDecode(response.body);

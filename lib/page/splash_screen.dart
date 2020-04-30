@@ -41,8 +41,10 @@ class SplashScreenState extends State<SplashScreen> {
       var tokenModelList=await TokenRepository(db).get();
       if(tokenModelList!=null && tokenModelList.length>0) {
         sharedPreferences.setString('token', tokenModelList.last.token);
-        Navigator.of(context).pushAndRemoveUntil(
+        /*Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (BuildContext context) => News()),
+                (Route<dynamic> rout) => false);*/
+        Navigator.of(context).pushNamedAndRemoveUntil('/News',
                 (Route<dynamic> rout) => false);
       }else {
         Navigator.of(context).pushAndRemoveUntil(

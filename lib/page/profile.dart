@@ -3,12 +3,10 @@ import 'dart:math';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
 import 'package:rahbaran/Widget/message.dart';
-import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
@@ -20,6 +18,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert' as convert;
 
 class Profile extends StatefulWidget {
+  static const routeName = '/Profile';
+
   @override
   ProfileState createState() => ProfileState();
 }
@@ -62,11 +62,18 @@ class ProfileState extends BaseAuthorizedState<Profile> {
       children: <Widget>[
         Scaffold(
           appBar: AppBar(
-            title: Text('اطلاعات کاربری',style: Theme.of(context).textTheme.title),
+            title: Text('اطلاعات کاربری', style: Theme.of(context).textTheme.title),
             centerTitle: true,
             elevation: 2,
+            automaticallyImplyLeading: false,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.arrow_forward),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ],
           ),
-          drawer: PrimaryDrawer(currentUser: currentUser,logout: logout,),
           body: BlocBuilder(
               bloc: loadingBloc,
               builder: (context, LoadingState state) {
@@ -137,7 +144,7 @@ class ProfileState extends BaseAuthorizedState<Profile> {
                   ? Text('')
                   : Text(
                       currentUser.fullName + ' / ' + currentUser.userModeName(),
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.body2,
                     ),
             ),
             Container(

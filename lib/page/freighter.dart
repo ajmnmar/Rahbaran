@@ -9,6 +9,7 @@ import 'package:rahbaran/bloc/error_bloc.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/common/plaque_id_direction.dart';
 import 'package:rahbaran/data_model/freighter_model.dart';
+import 'package:rahbaran/page/argument/freighter_details_argument.dart';
 import 'package:rahbaran/page/freighter_details.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/page/base_state.dart';
@@ -17,6 +18,8 @@ import 'dart:convert' as convert;
 import 'base_authorized_state.dart';
 
 class Freighter extends StatefulWidget {
+  static const routeName = '/Freighter';
+
   @override
   FreighterState createState() => FreighterState();
 }
@@ -81,7 +84,7 @@ class FreighterState extends BaseAuthorizedState<Freighter> {
         return Center(
           child: Text(
             'ناوگانی برای شما یافت نشد!',
-            style: Theme.of(context).textTheme.subhead,
+            style: Theme.of(context).textTheme.display2,
           ),
         );
       } else {
@@ -100,8 +103,8 @@ class FreighterState extends BaseAuthorizedState<Freighter> {
         margin: EdgeInsets.all(10),
         child: GestureDetector(
           onTap: (){
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (BuildContext context) => FreighterDetails(freighter)));
+            Navigator.of(context).pushNamed(FreighterDetails.routeName,
+              arguments: FreighterDetailArgument(freighter));
           },
           child: ClipPath(
             clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(

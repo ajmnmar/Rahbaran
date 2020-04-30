@@ -28,6 +28,7 @@ class PrimaryDrawer extends StatelessWidget {
         children: <Widget>[
           GestureDetector(
             onTap: (){
+              Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => Profile()));
             },
@@ -69,13 +70,16 @@ class PrimaryDrawer extends StatelessWidget {
               children: <Widget>[
                 ListTile(
                   onTap: (){
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (BuildContext context) => News()),
-                            (Route<dynamic> rout) => false);
+                    if(News.routeName==ModalRoute.of(context).settings.name){
+                      Navigator.of(context).pop();
+                    }else{
+                      Navigator.of(context).pushNamedAndRemoveUntil(News.routeName,
+                              (Route<dynamic> rout) => false);
+                    }
                   },
                   title: Text(
                     'اخبار',
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.caption,
                   ),
                   leading: Icon(
                     Icons.mail,
@@ -84,12 +88,16 @@ class PrimaryDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => Freighter()));
+                    if(Freighter.routeName==ModalRoute.of(context).settings.name){
+                      Navigator.of(context).pop();
+                    }else{
+                      Navigator.of(context).pushNamedAndRemoveUntil(Freighter.routeName,
+                              (Route<dynamic> rout) => false);
+                    }
                   },
                   title: Text(
                     'لیست ناوگان',
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.caption,
                   ),
                   leading: Icon(
                     Icons.local_shipping,
@@ -98,12 +106,16 @@ class PrimaryDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => ShippingDocument()));
+                    if(ShippingDocument.routeName==ModalRoute.of(context).settings.name){
+                      Navigator.of(context).pop();
+                    }else{
+                      Navigator.of(context).pushNamedAndRemoveUntil(ShippingDocument.routeName,
+                              (Route<dynamic> rout) => false);
+                    }
                   },
                   title: Text(
                     'لیست اسناد حمل',
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.caption,
                   ),
                   leading: Icon(
                     Icons.description,
@@ -112,12 +124,13 @@ class PrimaryDrawer extends StatelessWidget {
                 ),
                 ListTile(
                   onTap: (){
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) => AboutUs()));
                   },
                   title: Text(
                     'درباره ما',
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.caption,
                   ),
                   leading: Icon(
                     Icons.info,
@@ -127,7 +140,7 @@ class PrimaryDrawer extends StatelessWidget {
                 ListTile(
                   title: Text(
                     'خروج',
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.caption,
                   ),
                   leading: Icon(
                     Icons.power_settings_new,
@@ -135,12 +148,6 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                   onTap: () {
                     logout();
-                    /*SharedPreferences.getInstance().then((SharedPreferences val) {
-                      val.clear();
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (BuildContext context) => Login()),
-                              (Route<dynamic> rout) => false);
-                    });*/
                   },
                 ),
               ],

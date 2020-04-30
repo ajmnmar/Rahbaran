@@ -43,15 +43,15 @@ class MainBottomNavigationBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.mail),
-          title: Text('اخبار'),
+          title: Text('اخبار',style: Theme.of(context).textTheme.body1),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.local_shipping),
-          title: Text('لیست ناوگان'),
+          title: Text('لیست ناوگان',style: Theme.of(context).textTheme.body1,),
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.description),
-          title: Text('اسنادحمل'),
+          title: Text('اسنادحمل',style: Theme.of(context).textTheme.body1),
         ),
       ],
     );

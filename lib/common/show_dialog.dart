@@ -11,7 +11,7 @@ class ShowDialog{
             content: Container(
                 child: Text(content,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.body1,)
+                  style: Theme.of(context).textTheme.body2,)
             ),
             actions: <Widget>[
               FlatButton(
@@ -44,7 +44,7 @@ class ShowDialog{
                               width:58,
                               height: 58,
                               child: Image.asset('assets/images/camera.png')),
-                          Text('دوربین',style: Theme.of(context).textTheme.body1,),
+                          Text('دوربین',style: Theme.of(context).textTheme.body2,),
                         ],
                       ),
                     ),
@@ -56,7 +56,7 @@ class ShowDialog{
                               width:58,
                               height: 58,
                               child: Image.asset('assets/images/gallery.png')),
-                          Text('گالری',style:Theme.of(context).textTheme.body1),
+                          Text('گالری',style:Theme.of(context).textTheme.body2),
                         ],
                       ),
                     ),

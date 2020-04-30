@@ -10,6 +10,7 @@ import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/bloc/error_bloc.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/data_model/news_model.dart';
+import 'package:rahbaran/page/argument/news_details_argument.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/page/news_details.dart';
 import 'dart:convert' as convert;
@@ -21,6 +22,8 @@ import 'freighter.dart';
 import 'login.dart';
 
 class News extends StatefulWidget {
+  static const routeName = '/News';
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -31,8 +34,6 @@ class News extends StatefulWidget {
 class NewsState extends BaseAuthorizedState<News> {
   //style
   TextStyle newsDateTextStyle = TextStyle(color: Colors.grey, fontSize: 16);
-  TextStyle detailsButtonTextStyle =
-      TextStyle(color: StyleHelper.mainColor, fontSize: 16);
 
   //variable
   List<NewsModel> newsList;
@@ -93,7 +94,7 @@ class NewsState extends BaseAuthorizedState<News> {
         return Center(
           child: Text(
             'خبری برای نمایش وجود ندارد!',
-            style: Theme.of(context).textTheme.subhead,
+            style: Theme.of(context).textTheme.display2,
           ),
         );
       } else {
@@ -133,7 +134,7 @@ class NewsState extends BaseAuthorizedState<News> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(news.messageTitle, style: Theme.of(context).textTheme.title),
+                          Text(news.messageTitle, style: Theme.of(context).textTheme.headline),
                           SizedBox(
                             height: 15,
                           ),
@@ -156,21 +157,20 @@ class NewsState extends BaseAuthorizedState<News> {
                 Container(
                   child: Text(
                     '${news.messageBody.substring(0, 120)}...',
-                    style: Theme.of(context).textTheme.body1,
+                    style: Theme.of(context).textTheme.body2,
                   ),
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
                   child: FlatButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                NewsDetails(news)));
+                        Navigator.of(context).pushNamed(NewsDetails.routeName,
+                          arguments: NewsDetailsArgument(news));
                       },
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       child: Text(
                         'بیشتر',
-                        style: detailsButtonTextStyle,
+                        style: StyleHelper.detailsButtonTextStyle,
                       )),
                 )
               ],

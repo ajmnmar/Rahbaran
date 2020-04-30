@@ -24,6 +24,8 @@ import 'dart:convert' as convert;
 import 'base_state.dart';
 
 class Login extends StatefulWidget {
+  static const routeName = '/Login';
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState

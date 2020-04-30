@@ -26,7 +26,7 @@ class Plaque extends StatelessWidget {
               padding: EdgeInsets.only(top: 5, right: 12),
               child: Text(
                 plaqueSerial,
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.body2,
               ),
             ),
             Expanded(
@@ -34,7 +34,7 @@ class Plaque extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Text(
                     PlaqueIdDirection.changePlaqueIdDirection(plaqueId),
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.body2,
                   ),
                 ))
           ],

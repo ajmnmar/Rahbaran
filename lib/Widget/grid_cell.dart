@@ -14,7 +14,7 @@ class PrimaryGridCell extends StatelessWidget {
           color: StyleHelper.mainColor,
           padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
           margin: EdgeInsets.all(2),
-          child: Text(text)),
+          child: Text(text,style: Theme.of(context).textTheme.body2,)),
     );
   }
 }
@@ -33,7 +33,7 @@ class SecondaryGridCell extends StatelessWidget {
             color: Colors.black12,
             padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
             margin: EdgeInsets.all(2),
-            child: Text(text)));
+            child: Text(text,style: Theme.of(context).textTheme.body2)));
   }
 }
 
@@ -50,7 +50,7 @@ class TertiaryGridCell extends StatelessWidget {
             color: Colors.white,
             padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
             margin: EdgeInsets.all(2),
-            child: Text(text)));
+            child: Text(text,style: Theme.of(context).textTheme.body2)));
   }
 }
 

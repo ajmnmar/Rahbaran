@@ -3,26 +3,23 @@ import 'package:rahbaran/Widget/main_bottom_navigation_bar.dart';
 import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/Widget/message.dart';
 import 'package:rahbaran/data_model/news_model.dart';
+import 'package:rahbaran/page/argument/news_details_argument.dart';
 import 'base_authorized_state.dart';
 import 'base_state.dart';
 
 class NewsDetails extends StatefulWidget {
-  final NewsModel news;
-
-  NewsDetails(this.news);
+  static const routeName = '/NewsDetails';
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return NewsDetailsState(this.news);
+    return NewsDetailsState();
   }
 }
 
 class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
   //variable
-  final NewsModel news;
-
-  NewsDetailsState(this.news);
+  NewsDetailsArgument newsDetailsArgument;
 
   @override
   void initState() {
@@ -38,6 +35,8 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
 
   @override
   Widget build(BuildContext context) {
+    newsDetailsArgument = ModalRoute.of(context).settings.arguments;
+
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -71,7 +70,7 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
             padding: EdgeInsets.all(10),
             alignment: Alignment.center,
             height: MediaQuery.of(context).size.height * .35,
-            child: Image.network(news.messageImageAddress, fit: BoxFit.fill),
+            child: Image.network(newsDetailsArgument.news.messageImageAddress, fit: BoxFit.fill),
           ),
           Container(
             padding: EdgeInsets.all(10),
@@ -82,8 +81,8 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
           Container(
             padding: EdgeInsets.all(10),
             child: Text(
-              news.messageTitle,
-              style: Theme.of(context).textTheme.title,
+              newsDetailsArgument.news.messageTitle,
+              style: Theme.of(context).textTheme.headline,
             ),
           ),
           Expanded(
@@ -91,8 +90,8 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
               padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
               child: new SingleChildScrollView(
                 child: new Text(
-                  news.messageBody,
-                  style: Theme.of(context).textTheme.body1,
+                  newsDetailsArgument.news.messageBody,
+                  style: Theme.of(context).textTheme.body2,
                   textAlign: TextAlign.justify,
                 ),
               ),

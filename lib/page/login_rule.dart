@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rahbaran/Widget/logo_header.dart';
 
 class LoginRule extends StatelessWidget {
+  static const routeName = '/LoginRule';
+
   final helpContext='اپلیکیشن راهبران حمل و نقل خدمتی است از سازمان راهداری و حمل و نقل جاده ای به رانندگان و صاحبان ناوگان کشور.'+
   ' رانندگان و صاحبان ناوگان می توانند با استفاده از این اپلیکیشن به خدمات متنوع سازمان راهداری و حمل و نقل جاده ای دسترسی داشته باشند.'+
   '\n'+
@@ -43,7 +45,7 @@ class LoginRule extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 20),
       child: new Text(
         helpContext,
-        style: Theme.of(context).textTheme.body1,
+        style: Theme.of(context).textTheme.body2,
         textAlign: TextAlign.justify,
       ),
     );

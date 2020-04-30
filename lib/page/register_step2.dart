@@ -8,6 +8,7 @@ import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/mobile_mask.dart';
 import 'package:rahbaran/data_model/user_model.dart';
+import 'package:rahbaran/page/argument/register_step2_argument.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -16,15 +17,12 @@ import 'base_state.dart';
 import 'news.dart';
 
 class RegisterStep2 extends StatefulWidget {
-  final String guid;
-  final String otp;
-  final UserModel userModel;
+  static const routeName = '/RegisterStep2';
 
-  RegisterStep2(this.guid, this.otp, this.userModel);
+  RegisterStep2();
 
   @override
-  RegisterStep2State createState() =>
-      RegisterStep2State(this.guid, this.otp, this.userModel);
+  RegisterStep2State createState() => RegisterStep2State();
 }
 
 class RegisterStep2State extends BaseState<RegisterStep2> {
@@ -39,14 +37,12 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
   //variables
   ValidationBloc validationBloc = new ValidationBloc();
   LoadingBloc loadingBloc = new LoadingBloc();
-  String guid;
-  String otp;
-  UserModel userModel;
-
-  RegisterStep2State(this.guid, this.otp, this.userModel);
+  RegisterStep2Argument registerStep2Argument;
 
   @override
   Widget build(BuildContext context) {
+    registerStep2Argument = ModalRoute.of(context).settings.arguments;
+
     return Stack(
       children: <Widget>[
         Scaffold(
@@ -267,10 +263,10 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
       loadingBloc.add(LoadingEvent.show);
 
       var url =
-          'https://apimy.rmto.ir/api/Hambar/RegistrationStep2?password=${passwordController.text}&token=$guid&otp=$otp';
+          'https://apimy.rmto.ir/api/Hambar/RegistrationStep2?password=${passwordController.text}&token=${registerStep2Argument.guid}&otp=${registerStep2Argument.otp}';
       var response = await postApiData(url,
           headers: {"Content-Type": "application/json"},
-          body: userModel.toJson());
+          body: registerStep2Argument.userModel.toJson());
       if (response != null) {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {

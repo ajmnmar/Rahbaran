@@ -7,14 +7,16 @@ import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/mobile_mask.dart';
+import 'package:rahbaran/page/argument/register_step1_argument.dart';
 import 'package:rahbaran/page/register_step1.dart';
-
 import '../common/national_code.dart';
 import '../theme/style_helper.dart';
 import 'base_state.dart';
 import 'dart:convert' as convert;
 
 class PreRegister extends StatefulWidget {
+  static const routeName = '/PreRegister';
+
   @override
   PreRegisterState createState() => PreRegisterState();
 }
@@ -160,9 +162,8 @@ class PreRegisterState extends BaseState<PreRegister> {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    RegisterStep1(jsonResponse['data'])));
+            Navigator.of(context).pushReplacementNamed(RegisterStep1.routeName,
+              arguments: RegisterStep1Argument(jsonResponse['data']));
           });
         } else if (jsonResponse['message']['code'] == 1) {
           validationBloc.add(ShowValidationEvent('برای این کاربر شماره موبایل ثبت نشده است'));

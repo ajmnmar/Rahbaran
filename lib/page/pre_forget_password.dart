@@ -9,6 +9,7 @@ import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/national_code.dart';
+import 'package:rahbaran/page/argument/forget_password_argument.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:rahbaran/page/forget_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,6 +18,8 @@ import 'dart:convert' as convert;
 import 'base_state.dart';
 
 class PreForgetPassword extends StatefulWidget {
+  static const routeName = '/PreForgetPassword';
+
   @override
   PreForgetPasswordState createState() => PreForgetPasswordState();
 }
@@ -163,9 +166,8 @@ class PreForgetPasswordState extends BaseState<PreForgetPassword> {
         var jsonResponse = convert.jsonDecode(response.body);
         if (jsonResponse['message']['code'] == 0) {
           setState(() {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    ForgetPassword(jsonResponse['data'])));
+            Navigator.of(context).pushReplacementNamed(ForgetPassword.routeName,
+              arguments: ForgetPasswordArgument(jsonResponse['data']));
           });
         } else if (jsonResponse['message']['code'] == 2) {
           validationBloc.add(ShowValidationEvent('کاربری با این مشخصات پیدا نشد'));

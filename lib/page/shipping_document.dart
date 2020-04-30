@@ -7,6 +7,7 @@ import 'package:rahbaran/Widget/primary_drawer.dart';
 import 'package:rahbaran/bloc/error_bloc.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/data_model/shipping_document_model.dart';
+import 'package:rahbaran/page/argument/shipping_document_details_argument.dart';
 import 'package:rahbaran/page/base_authorized_state.dart';
 import 'package:rahbaran/page/shipping_document_details.dart';
 import 'dart:convert' as convert;
@@ -14,6 +15,8 @@ import 'dart:convert' as convert;
 import 'package:rahbaran/theme/style_helper.dart';
 
 class ShippingDocument extends StatefulWidget {
+  static const routeName = '/ShippingDocument';
+
   @override
   ShippingDocumentState createState() => ShippingDocumentState();
 }
@@ -78,7 +81,7 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
         return Center(
           child: Text(
             'سندحمل برای شما یافت نشد!',
-            style: Theme.of(context).textTheme.subhead,
+            style: Theme.of(context).textTheme.display2,
           ),
         );
       } else {
@@ -97,8 +100,8 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
         margin: EdgeInsets.all(10),
         child: GestureDetector(
           onTap: (){
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (BuildContext context) => ShippingDocumentDetails(shippingDocument)));
+            Navigator.of(context).pushNamed(ShippingDocumentDetails.routeName,
+              arguments: ShippingDocumentDetailsArgument(shippingDocument));
           },
           child: ClipPath(
             clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(

@@ -20,9 +20,13 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   getApiData(String url, {Map<String, String> headers}) async {
     http.Response response;
     try {
-      response = await http
-          .get(url, headers: headers);
-          //.timeout(Duration(seconds: httpRequestTimeout));
+      if (headers==null) {
+        response = await http.get(url);
+      }else{
+        response = await http
+            .get(url, headers: headers);
+        //.timeout(Duration(seconds: httpRequestTimeout));
+      }
       if (response.statusCode == 401) {
         SharedPreferences.getInstance().then((SharedPreferences val) {
           val.clear();
