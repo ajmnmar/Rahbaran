@@ -32,8 +32,7 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
       //to do (log)
     }finally{
       if (token == null) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (BuildContext context) => Login()),
+        Navigator.of(context).pushNamedAndRemoveUntil(Login.routeName,
                 (Route<dynamic> rout) => false);
       }
     }
@@ -46,8 +45,7 @@ abstract class BaseAuthorizedState<T extends StatefulWidget>
       //save token to db
       DatabaseHelper().database.then((db){
         TokenRepository(db).deleteAll().then((val){
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => Login()),
+          Navigator.of(context).pushNamedAndRemoveUntil(Login.routeName,
                   (Route<dynamic> rout) => false);
         });
       });

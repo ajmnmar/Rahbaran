@@ -26,17 +26,14 @@ class MainBottomNavigationBar extends StatelessWidget {
         if (isActiveBottomNavigation && bottomNavigationSelectedIndex == index) return;
         switch (index) {
           case 0:
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (BuildContext context) => News()),
+            Navigator.of(context).pushNamedAndRemoveUntil(News.routeName,
                 (Route<dynamic> rout) => false);
             break;
           case 1:
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => Freighter()));
+            Navigator.of(context).pushNamed(Freighter.routeName);
             break;
           case 2:
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => ShippingDocument()));
+            Navigator.of(context).pushNamed(ShippingDocument.routeName);
             break;
         }
       },

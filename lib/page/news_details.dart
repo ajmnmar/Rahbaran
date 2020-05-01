@@ -62,6 +62,41 @@ class NewsDetailsState extends BaseAuthorizedState<NewsDetails> {
   }
 
   newsBody(context) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            margin: EdgeInsets.symmetric(vertical: 20),
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height * .35,
+                  child: Image.network(newsDetailsArgument.news.messageImageAddress, fit: BoxFit.fill),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  alignment: Alignment.center,
+                  child: Text(
+                    newsDetailsArgument.news.messageTitle,
+                    style: Theme.of(context).textTheme.headline,
+                  ),
+                ),
+                Container(
+                  child: new Text(
+                    newsDetailsArgument.news.messageBody,
+                    style: Theme.of(context).textTheme.body2,
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+
     return Card(
       margin: EdgeInsets.all(10),
       child: Column(

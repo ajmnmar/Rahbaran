@@ -13,6 +13,7 @@ import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/show_dialog.dart';
 import 'package:rahbaran/data_model/user_model.dart';
 import 'package:rahbaran/page/base_authorized_state.dart';
+import 'package:rahbaran/page/change_password.dart';
 import 'package:rahbaran/theme/style_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert' as convert;
@@ -314,7 +315,9 @@ class ProfileState extends BaseAuthorizedState<Profile> {
     }
   }
 
-  void changePasswordClicked() {}
+  void changePasswordClicked() {
+    Navigator.of(context).pushNamed(ChangePassword.routeName);
+  }
 
   onCameraTap() {
     getImage(ImageSource.camera).then((base64Image){

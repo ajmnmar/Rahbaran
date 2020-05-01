@@ -7,10 +7,8 @@ import 'package:rahbaran/Widget/primary_validation.dart';
 import 'package:rahbaran/bloc/loading_bloc.dart';
 import 'package:rahbaran/bloc/validation_bloc.dart';
 import 'package:rahbaran/common/mobile_mask.dart';
-import 'package:rahbaran/data_model/user_model.dart';
 import 'package:rahbaran/page/argument/register_step2_argument.dart';
 import 'package:rahbaran/theme/style_helper.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'base_state.dart';
@@ -273,9 +271,8 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
           SharedPreferences sharedPreferences =
               await SharedPreferences.getInstance();
           sharedPreferences.setString('token', jsonResponse['data']['token']);
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => News()),
-              (Route<dynamic> rout) => false);
+          Navigator.of(context).pushNamedAndRemoveUntil(News.routeName,
+                  (Route<dynamic> rout) => false);
         } else if (jsonResponse['message']['code'] == 1) {
           validationBloc.add(
               ShowValidationEvent('برای این کاربر شماره موبایل ثبت نشده است'));

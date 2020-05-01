@@ -30,8 +30,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       if (response.statusCode == 401) {
         SharedPreferences.getInstance().then((SharedPreferences val) {
           val.clear();
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => Login()),
+          Navigator.of(context).pushNamedAndRemoveUntil(Login.routeName,
                   (Route<dynamic> rout) => false);
         });
       } else if (response.statusCode != 200) {
@@ -72,8 +71,7 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
       if (response.statusCode == 401) {
         SharedPreferences.getInstance().then((SharedPreferences val) {
           val.clear();
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => Login()),
+          Navigator.of(context).pushNamedAndRemoveUntil(Login.routeName,
                   (Route<dynamic> rout) => false);
         });
       }

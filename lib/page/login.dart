@@ -207,8 +207,7 @@ class LoginState extends BaseState<Login> {
           await TokenRepository(db).deleteAll();
           await TokenRepository(db).save(TokenModel(jsonResponse['data']['token'], ''));
 
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => News()),
+          Navigator.of(context).pushNamedAndRemoveUntil(News.routeName,
                   (Route<dynamic> rout) => false);
         } else if (jsonResponse['message']['code'] == 6) {
           validationBloc.add(ShowValidationEvent('نام کاربری یا رمز عبور اشتباه است'));
@@ -238,17 +237,14 @@ class LoginState extends BaseState<Login> {
   }
 
   void forgetPasswordClicked() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => PreForgetPassword()));
+    Navigator.of(context).pushNamed(PreForgetPassword.routeName);
   }
 
   void registerClicked() {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (BuildContext context) => PreRegister()));
+    Navigator.of(context).pushNamed(PreRegister.routeName);
   }
 
   void loginHelpClicked() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => LoginRule()));
+    Navigator.of(context).pushNamed(LoginRule.routeName);
   }
 }
