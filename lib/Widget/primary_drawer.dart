@@ -154,7 +154,7 @@ class PrimaryDrawer extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(vertical: 15),
             alignment: Alignment.center,
-            child: Text('راهبران حمل و نقل (1.0.0)',style:versionTextStyle),
+            child: Text('راهبران حمل و نقل (1.1.1)',style:versionTextStyle),
           )
         ],
       ),
