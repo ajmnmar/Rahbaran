@@ -135,7 +135,7 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         TertiaryGridCell('تاریخ صدور:'),
-                        TertiaryGridCell(shippingDocument.issueDateString),
+                        TertiaryGridCell(shippingDocument.issueDate),
                       ],
                     ),
                   ),

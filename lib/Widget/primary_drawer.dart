@@ -32,9 +32,8 @@ class PrimaryDrawer extends StatelessWidget {
               Navigator.of(context).pushNamed(Profile.routeName);
             },
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 15),
+              padding: EdgeInsets.only(bottom: 15,top: MediaQuery.of(context).padding.top+15),
               color: StyleHelper.mainColor,
-              height: 150,
               width: double.infinity,
               child: Column(
                 children: <Widget>[
