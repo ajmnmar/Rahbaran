@@ -40,6 +40,10 @@ class RegisterStep2State extends BaseState<RegisterStep2> {
   @override
   Widget build(BuildContext context) {
     registerStep2Argument = ModalRoute.of(context).settings.arguments;
+    emailController.text=registerStep2Argument.userModel.email;
+    nationalCodeController.text=registerStep2Argument.userModel.nationalCode;
+    nameController.text=registerStep2Argument.userModel.fullName;
+    mobileController.text=registerStep2Argument.userModel.mobile;
 
     return Stack(
       children: <Widget>[
