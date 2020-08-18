@@ -87,7 +87,10 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
       } else {
         return ListView.builder(
           itemBuilder: (BuildContext context, int index) {
-            return shippingDocumentCard(shippingDocumentList[index]);
+            if(shippingDocumentList[index].docTypeString.toLowerCase()=='passenger')
+              return passengerShippingDocumentCard(shippingDocumentList[index]);
+            else
+              return otherShippingDocumentCard(shippingDocumentList[index]);
           },
           itemCount: shippingDocumentList.length,
         );
@@ -95,7 +98,7 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
     }
   }
 
-  Widget shippingDocumentCard(ShippingDocumentModel shippingDocument) {
+  Widget otherShippingDocumentCard(ShippingDocumentModel shippingDocument) {
     return Card(
         margin: EdgeInsets.all(10),
         child: GestureDetector(
@@ -153,6 +156,75 @@ class ShippingDocumentState extends BaseAuthorizedState<ShippingDocument> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         TertiaryGridCell('سریال بارنامه:'),
+                        TertiaryGridCell(shippingDocument.serial),
+                      ],
+                    ),
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        TertiaryGridCell('کرایه:'),
+                        TertiaryGridCell(shippingDocument.costS),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+
+  Widget passengerShippingDocumentCard(ShippingDocumentModel shippingDocument) {
+    return Card(
+        margin: EdgeInsets.all(10),
+        child: GestureDetector(
+          onTap: (){
+            Navigator.of(context).pushNamed(ShippingDocumentDetails.routeName,
+                arguments: ShippingDocumentDetailsArgument(shippingDocument));
+          },
+          child: ClipPath(
+            clipper: ShapeBorderClipper(shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(3))),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  border: Border(right: BorderSide(color: StyleHelper.mainColor, width: 5))),
+              child: Column(
+                children: <Widget>[
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        TertiaryGridCell('نوع سند:'),
+                        TertiaryGridCell(shippingDocument.docTypeStr),
+                      ],
+                    ),
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        TertiaryGridCell('تاریخ صدور:'),
+                        TertiaryGridCell(shippingDocument.issueDate),
+                      ],
+                    ),
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        TertiaryGridCell('مسیر:'),
+                        TertiaryGridCell(shippingDocument.source+' - '+shippingDocument.destination),
+                      ],
+                    ),
+                  ),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        TertiaryGridCell('شماره صورت وضعیت:'),
                         TertiaryGridCell(shippingDocument.serial),
                       ],
                     ),

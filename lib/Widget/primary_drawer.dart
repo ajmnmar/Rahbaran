@@ -13,13 +13,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PrimaryDrawer extends StatelessWidget {
   //style
-  final TextStyle versionTextStyle=TextStyle(fontSize: 14);
+  final TextStyle versionTextStyle = TextStyle(fontSize: 14);
 
   //variable
   final UserModel currentUser;
   final void Function() logout;
 
-  PrimaryDrawer({this.currentUser,this.logout});
+  PrimaryDrawer({this.currentUser, this.logout});
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +27,13 @@ class PrimaryDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed(Profile.routeName);
             },
             child: Container(
-              padding: EdgeInsets.only(bottom: 15,top: MediaQuery.of(context).padding.top+15),
+              padding: EdgeInsets.only(
+                  bottom: 15, top: MediaQuery.of(context).padding.top + 15),
               color: StyleHelper.mainColor,
               width: double.infinity,
               child: Column(
@@ -43,8 +44,8 @@ class PrimaryDrawer extends StatelessWidget {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       backgroundImage: (currentUser == null ||
-                          currentUser.userImageAddress == null ||
-                          currentUser.userImageAddress.isEmpty)
+                              currentUser.userImageAddress == null ||
+                              currentUser.userImageAddress.isEmpty)
                           ? Image.asset('assets/images/driverempty.png').image
                           : NetworkImage(currentUser.userImageAddress),
                     ),
@@ -52,12 +53,12 @@ class PrimaryDrawer extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: 10),
                     child: (currentUser == null ||
-                        currentUser.fullName == null ||
-                        currentUser.fullName.isEmpty)
+                            currentUser.fullName == null ||
+                            currentUser.fullName.isEmpty)
                         ? Text('')
                         : Text(currentUser.fullName +
-                        ' / ' +
-                        currentUser.userModeName()),
+                            ' / ' +
+                            currentUser.userModeName()),
                   ),
                 ],
               ),
@@ -67,12 +68,13 @@ class PrimaryDrawer extends StatelessWidget {
             child: ListView(
               children: <Widget>[
                 ListTile(
-                  onTap: (){
-                    if(News.routeName==ModalRoute.of(context).settings.name){
+                  onTap: () {
+                    if (News.routeName ==
+                        ModalRoute.of(context).settings.name) {
                       Navigator.of(context).pop();
-                    }else{
-                      Navigator.of(context).pushNamedAndRemoveUntil(News.routeName,
-                              (Route<dynamic> rout) => false);
+                    } else {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          News.routeName, (Route<dynamic> rout) => false);
                     }
                   },
                   title: Text(
@@ -85,12 +87,13 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  onTap: (){
-                    if(Freighter.routeName==ModalRoute.of(context).settings.name){
+                  onTap: () {
+                    if (Freighter.routeName ==
+                        ModalRoute.of(context).settings.name) {
                       Navigator.of(context).pop();
-                    }else{
-                      Navigator.of(context).pushNamedAndRemoveUntil(Freighter.routeName,
-                              (Route<dynamic> rout) => false);
+                    } else {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          Freighter.routeName, (Route<dynamic> rout) => false);
                     }
                   },
                   title: Text(
@@ -103,12 +106,14 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  onTap: (){
-                    if(ShippingDocument.routeName==ModalRoute.of(context).settings.name){
+                  onTap: () {
+                    if (ShippingDocument.routeName ==
+                        ModalRoute.of(context).settings.name) {
                       Navigator.of(context).pop();
-                    }else{
-                      Navigator.of(context).pushNamedAndRemoveUntil(ShippingDocument.routeName,
-                              (Route<dynamic> rout) => false);
+                    } else {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          ShippingDocument.routeName,
+                          (Route<dynamic> rout) => false);
                     }
                   },
                   title: Text(
@@ -121,7 +126,7 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  onTap: (){
+                  onTap: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).pushNamed(AboutUs.routeName);
                   },
@@ -153,14 +158,22 @@ class PrimaryDrawer extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(vertical: 15),
             alignment: Alignment.center,
-            child: Text('راهبران حمل و نقل (1.1.1)',style:versionTextStyle),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  child: Image.asset(
+                    "assets/images/pdnlogo.png",
+                    scale: 1.25,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Text('راهبران حمل و نقل (1.1.3)', style: versionTextStyle),
+              ],
+            ),
           )
         ],
       ),
     );
   }
 }
-
-
-
-

@@ -37,61 +37,106 @@ class ShippingDocumentDetailsState
   @override
   Widget build(BuildContext context) {
     shippingDocumentDetailsArgument = ModalRoute.of(context).settings.arguments;
-    shippingDocumentFields = [
-      [
-        'تاریخ صدور:',
-        shippingDocumentDetailsArgument.shippingDocument.issueDate
-      ],
-      ['شهر مبدا:', shippingDocumentDetailsArgument.shippingDocument.source],
-      [
-        'کدپستی مبدا:',
-        shippingDocumentDetailsArgument.shippingDocument.sourcePostalCode
-      ],
-      [
-        'شهر مقصد:',
-        shippingDocumentDetailsArgument.shippingDocument.destination
-      ],
-      [
-        'کدپستی مقصد:',
-        shippingDocumentDetailsArgument.shippingDocument.destinationPostalCode
-      ],
-      [
-        'شرکت فرابر:',
-        shippingDocumentDetailsArgument.shippingDocument.forwarderCompany
-      ],
-      [
-        'شرکت حمل و نقل:',
-        shippingDocumentDetailsArgument.shippingDocument.carrierCompany
-      ],
-      [
-        'کدرهگیری:',
-        shippingDocumentDetailsArgument.shippingDocument.trackingCode
-      ],
-      [
-        'زمان ثبت در راهداری:',
-        shippingDocumentDetailsArgument.shippingDocument.timeRahdariS
-      ],
-      ['شرح کالا:', shippingDocumentDetailsArgument.shippingDocument.goodTitle],
-      ['وزن:', shippingDocumentDetailsArgument.shippingDocument.goodWeight],
-      ['کرایه:', shippingDocumentDetailsArgument.shippingDocument.costS],
-      [
-        'دریافتی از راننده:',
-        shippingDocumentDetailsArgument.shippingDocument.commissionS
-      ],
-      [
-        'سریال بارنامه:',
-        shippingDocumentDetailsArgument.shippingDocument.serial
-      ],
-      ['بارگیر:', shippingDocumentDetailsArgument.shippingDocument.loader],
-      [
-        'نام فرستنده کالا:',
-        shippingDocumentDetailsArgument.shippingDocument.senderFullName
-      ],
-      [
-        'نام گیرنده کالا:',
-        shippingDocumentDetailsArgument.shippingDocument.receiverFullName
-      ],
-    ];
+    if(shippingDocumentDetailsArgument.shippingDocument.docTypeString.toLowerCase()=='passenger') {
+      shippingDocumentFields = [
+        [
+          'تاریخ صدور:',
+          shippingDocumentDetailsArgument.shippingDocument.issueDate
+        ],
+        ['شهر مبدا:', shippingDocumentDetailsArgument.shippingDocument.source],
+        [
+          'کدپستی مبدا:',
+          shippingDocumentDetailsArgument.shippingDocument.sourcePostalCode
+        ],
+        [
+          'شهر مقصد:',
+          shippingDocumentDetailsArgument.shippingDocument.destination
+        ],
+        [
+          'کدپستی مقصد:',
+          shippingDocumentDetailsArgument.shippingDocument.destinationPostalCode
+        ],
+        [
+          'شرکت فرابر:',
+          shippingDocumentDetailsArgument.shippingDocument.forwarderCompany
+        ],
+        [
+          'کدرهگیری:',
+          shippingDocumentDetailsArgument.shippingDocument.trackingCode
+        ],
+        [
+          'زمان ثبت در راهداری:',
+          shippingDocumentDetailsArgument.shippingDocument.timeRahdariS
+        ],
+        ['تعداد مسافر:', shippingDocumentDetailsArgument.shippingDocument.goodWeight.toInt()],
+        ['کرایه:', shippingDocumentDetailsArgument.shippingDocument.costS],
+        [
+          'دریافتی از راننده:',
+          shippingDocumentDetailsArgument.shippingDocument.commissionS
+        ],
+        [
+          'شماره صورت وضعیت:',
+          shippingDocumentDetailsArgument.shippingDocument.serial
+        ],
+        ['نوع وسیله:', shippingDocumentDetailsArgument.shippingDocument.loader],
+      ];
+    }else{
+      shippingDocumentFields = [
+        [
+          'تاریخ صدور:',
+          shippingDocumentDetailsArgument.shippingDocument.issueDate
+        ],
+        ['شهر مبدا:', shippingDocumentDetailsArgument.shippingDocument.source],
+        [
+          'کدپستی مبدا:',
+          shippingDocumentDetailsArgument.shippingDocument.sourcePostalCode
+        ],
+        [
+          'شهر مقصد:',
+          shippingDocumentDetailsArgument.shippingDocument.destination
+        ],
+        [
+          'کدپستی مقصد:',
+          shippingDocumentDetailsArgument.shippingDocument.destinationPostalCode
+        ],
+        [
+          'شرکت فرابر:',
+          shippingDocumentDetailsArgument.shippingDocument.forwarderCompany
+        ],
+        [
+          'شرکت حمل و نقل:',
+          shippingDocumentDetailsArgument.shippingDocument.carrierCompany
+        ],
+        [
+          'کدرهگیری:',
+          shippingDocumentDetailsArgument.shippingDocument.trackingCode
+        ],
+        [
+          'زمان ثبت در راهداری:',
+          shippingDocumentDetailsArgument.shippingDocument.timeRahdariS
+        ],
+        ['شرح کالا:', shippingDocumentDetailsArgument.shippingDocument.goodTitle],
+        ['وزن:', shippingDocumentDetailsArgument.shippingDocument.goodWeight],
+        ['کرایه:', shippingDocumentDetailsArgument.shippingDocument.costS],
+        [
+          'دریافتی از راننده:',
+          shippingDocumentDetailsArgument.shippingDocument.commissionS
+        ],
+        [
+          'سریال بارنامه:',
+          shippingDocumentDetailsArgument.shippingDocument.serial
+        ],
+        ['بارگیر:', shippingDocumentDetailsArgument.shippingDocument.loader],
+        [
+          'نام فرستنده کالا:',
+          shippingDocumentDetailsArgument.shippingDocument.senderFullName
+        ],
+        [
+          'نام گیرنده کالا:',
+          shippingDocumentDetailsArgument.shippingDocument.receiverFullName
+        ],
+      ];
+    }
     return Stack(
       children: <Widget>[
         Scaffold(
