@@ -155,8 +155,15 @@ class PrimaryDrawer extends StatelessWidget {
               ],
             ),
           ),
+          Divider(
+            color: Colors.black12,
+            height: 10,
+            thickness: 1,
+            endIndent: MediaQuery.of(context).size.width * .02,
+            indent: MediaQuery.of(context).size.width * .02,
+          ),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 15),
+            padding: EdgeInsets.symmetric(vertical: 10),
             alignment: Alignment.center,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +171,7 @@ class PrimaryDrawer extends StatelessWidget {
                 Container(
                   child: Image.asset(
                     "assets/images/pdnlogo.png",
-                    scale: 1.25,
+                    scale: 1.4,
                     fit: BoxFit.contain,
                   ),
                 ),
