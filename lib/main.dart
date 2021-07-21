@@ -5,6 +5,7 @@ import 'package:rahbaran/page/change_password.dart';
 import 'package:rahbaran/page/forget_password.dart';
 import 'package:rahbaran/page/freighter.dart';
 import 'package:rahbaran/page/freighter_details.dart';
+import 'package:rahbaran/page/havale.dart';
 import 'package:rahbaran/page/login_rule.dart';
 import 'package:rahbaran/page/pre_register.dart';
 import 'package:rahbaran/page/profile.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         RegisterStep2.routeName:(context) => RegisterStep2(),
         ShippingDocument.routeName:(context) => ShippingDocument(),
         ShippingDocumentDetails.routeName:(context) => ShippingDocumentDetails(),
+        Havale.routeName: (context) => Havale(),
       },
       //home: SplashScreen(),
     );

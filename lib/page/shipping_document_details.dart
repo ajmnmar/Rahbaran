@@ -61,6 +61,10 @@ class ShippingDocumentDetailsState
           shippingDocumentDetailsArgument.shippingDocument.forwarderCompany
         ],
         [
+          'شرکت حمل و نقل:',
+          shippingDocumentDetailsArgument.shippingDocument.carrierCompany
+        ],
+        [
           'کدرهگیری:',
           shippingDocumentDetailsArgument.shippingDocument.trackingCode
         ],

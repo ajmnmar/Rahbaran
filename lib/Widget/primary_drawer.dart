@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rahbaran/data_model/user_model.dart';
 import 'package:rahbaran/page/about_us.dart';
 import 'package:rahbaran/page/freighter.dart';
+import 'package:rahbaran/page/havale.dart';
 import 'package:rahbaran/page/login.dart';
 import 'package:rahbaran/page/news.dart';
 import 'package:rahbaran/page/profile.dart';
@@ -102,6 +103,25 @@ class PrimaryDrawer extends StatelessWidget {
                   ),
                   leading: Icon(
                     Icons.local_shipping,
+                    color: StyleHelper.iconColor,
+                  ),
+                ),
+                ListTile(
+                  onTap: () {
+                    if (Havale.routeName ==
+                        ModalRoute.of(context).settings.name) {
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          Havale.routeName, (Route<dynamic> rout) => false);
+                    }
+                  },
+                  title: Text(
+                    'لیست حواله',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                  leading: Icon(
+                    Icons.assignment,
                     color: StyleHelper.iconColor,
                   ),
                 ),

@@ -99,10 +99,10 @@ class NewsState extends BaseAuthorizedState<News> {
         );
       } else {
         return ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return newsCard(newsList[index]);
-          },
-          itemCount: newsList.length,
+            itemCount: newsList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return newsCard(newsList[index]);
+            }
         );
       }
     }
@@ -156,7 +156,7 @@ class NewsState extends BaseAuthorizedState<News> {
                 ),
                 Container(
                   child: Text(
-                    '${news.messageBody.substring(0, 120)}...',
+                      news.messageBody.length>120? '${news.messageBody.substring(0, 120)}...':'${news.messageBody}',
                     style: Theme.of(context).textTheme.body2,
                   ),
                 ),

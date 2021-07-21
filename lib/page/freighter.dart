@@ -46,14 +46,14 @@ class FreighterState extends BaseAuthorizedState<Freighter> {
       });
       initCurrentUser().then((val) {
         setState(() {});
-      });
-    });
-  }
+  });
+});
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
+@override
+Widget build(BuildContext context) {
+  return Stack(
+    children: <Widget>[
         Scaffold(
           appBar: AppBar(
             title: Text('لیست ناوگان',style: Theme.of(context).textTheme.title),
