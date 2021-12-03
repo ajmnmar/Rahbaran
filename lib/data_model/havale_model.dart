@@ -30,7 +30,7 @@ class HavaleModel{
       json['destination'],
       json['issueDate'],
       json['issuePersianDate'],
-      json['plaqueId'].toString(),
+      json['plaqueId'],
       json['plaqueSerial']
     );
   }

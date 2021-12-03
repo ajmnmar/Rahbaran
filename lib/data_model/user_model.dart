@@ -40,7 +40,7 @@ class UserModel {
   }
 
   factory UserModel.fromJson(dynamic json) {
-    return UserModel(
+    var user= UserModel(
         id:json['id'].toString(),
         firstName:json['firstname'],
         lastName:json['lastname'],
@@ -51,8 +51,17 @@ class UserModel {
         email:json['email'],
         userImageAddress:json['userImageAddress'],
         userModeId:json['userModeId'],
-        userMode:UserMode.values[json['userModeId']]
+        userMode:UserMode.driver
     );
+    switch(json['userModeId']){
+      case 1:
+        user.userMode=UserMode.driver;
+        break;
+      case 2:
+        user.userMode=UserMode.owner;
+        break;
+    }
+    return user;
   }
 
   toJson() {

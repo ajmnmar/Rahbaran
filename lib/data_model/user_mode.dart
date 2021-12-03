@@ -1,4 +1,5 @@
 enum UserMode{
-  owner,
-  driver
+  driver,
+  owner
+
 }

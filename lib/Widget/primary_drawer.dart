@@ -195,7 +195,7 @@ class PrimaryDrawer extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                Text('راهبران حمل و نقل (1.1.3)', style: versionTextStyle),
+                Text('راهبران حمل و نقل (1.2.2)', style: versionTextStyle),
               ],
             ),
           )
